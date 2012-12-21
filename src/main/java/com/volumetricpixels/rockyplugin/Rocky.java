@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.server.Packet;
+import net.minecraft.server.v1_4_6.Packet;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -208,7 +208,7 @@ public class Rocky extends JavaPlugin implements Runnable {
 					RockyManager.printConsole("Kicking " + player.getName()
 							+ " for not running Rocky");
 
-					RockyManager.getPlayer(player).getHandle().netServerHandler.networkManager
+					RockyManager.getPlayer(player).getHandle().playerConnection.networkManager
 							.a(configuration.getKickMessage(), new Object[0]);
 				} else if (player.hasPermission(RockyPermission.FORCE_CLIENT
 						.getNode())) {
@@ -219,7 +219,7 @@ public class Rocky extends JavaPlugin implements Runnable {
 					RockyManager.printConsole("Kicking " + player.getName()
 							+ " for not running Rocky when has been forced");
 
-					RockyManager.getPlayer(player).getHandle().netServerHandler.networkManager
+					RockyManager.getPlayer(player).getHandle().playerConnection.networkManager
 							.a(configuration.getKickMessage(), new Object[0]);
 				}
 			} else {

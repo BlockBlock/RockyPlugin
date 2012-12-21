@@ -21,21 +21,20 @@ package com.volumetricpixels.rockyplugin.packet;
 
 import java.util.concurrent.LinkedBlockingDeque;
 
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.INetworkManager;
-import net.minecraft.server.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.NetServerHandler;
-import net.minecraft.server.Packet;
-import net.minecraft.server.Packet103SetSlot;
-import net.minecraft.server.Packet104WindowItems;
-import net.minecraft.server.Packet107SetCreativeSlot;
-import net.minecraft.server.Packet14BlockDig;
-import net.minecraft.server.Packet204LocaleAndViewDistance;
-import net.minecraft.server.Packet20NamedEntitySpawn;
-import net.minecraft.server.Packet21PickupSpawn;
-import net.minecraft.server.Packet250CustomPayload;
-import net.minecraft.server.Packet29DestroyEntity;
+import net.minecraft.server.v1_4_6.EntityPlayer;
+import net.minecraft.server.v1_4_6.INetworkManager;
+import net.minecraft.server.v1_4_6.ItemStack;
+import net.minecraft.server.v1_4_6.MinecraftServer;
+import net.minecraft.server.v1_4_6.PlayerConnection;
+import net.minecraft.server.v1_4_6.Packet;
+import net.minecraft.server.v1_4_6.Packet103SetSlot;
+import net.minecraft.server.v1_4_6.Packet104WindowItems;
+import net.minecraft.server.v1_4_6.Packet107SetCreativeSlot;
+import net.minecraft.server.v1_4_6.Packet14BlockDig;
+import net.minecraft.server.v1_4_6.Packet204LocaleAndViewDistance;
+import net.minecraft.server.v1_4_6.Packet20NamedEntitySpawn;
+import net.minecraft.server.v1_4_6.Packet250CustomPayload;
+import net.minecraft.server.v1_4_6.Packet29DestroyEntity;
 
 import org.bukkit.Bukkit;
 import org.fest.reflect.core.Reflection;
@@ -51,7 +50,7 @@ import com.volumetricpixels.rockyplugin.RockyMaterialManager;
 /**
  * 
  */
-public class RockyPacketHandler extends NetServerHandler {
+public class RockyPacketHandler extends PlayerConnection {
 	/**
 	 * 
 	 */
@@ -221,9 +220,6 @@ public class RockyPacketHandler extends NetServerHandler {
 						.getItem(((Packet20NamedEntitySpawn) packet).h)
 						.getDefaultId();
 			}
-			break;
-		case 0x15:
-			stack = ((Packet21PickupSpawn) packet).h;
 			break;
 		case 0x67:
 			stack = ((Packet103SetSlot) packet).c;

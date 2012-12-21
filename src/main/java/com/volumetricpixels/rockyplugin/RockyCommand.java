@@ -19,7 +19,7 @@
  */
 package com.volumetricpixels.rockyplugin;
 
-import net.minecraft.server.Item;
+import net.minecraft.server.v1_4_6.Item;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

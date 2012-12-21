@@ -21,10 +21,10 @@ package com.volumetricpixels.rockyplugin.item;
 
 import java.util.Map;
 
-import net.minecraft.server.Block;
-import net.minecraft.server.EnumToolMaterial;
-import net.minecraft.server.ItemStack;
-import net.minecraft.server.ItemTool;
+import net.minecraft.server.v1_4_6.Block;
+import net.minecraft.server.v1_4_6.EnumToolMaterial;
+import net.minecraft.server.v1_4_6.ItemStack;
+import net.minecraft.server.v1_4_6.ItemTool;
 
 import org.fest.reflect.core.Reflection;
 
@@ -60,7 +60,7 @@ public class RockyItemTool extends ItemTool implements RockyItemType {
 		setMaxDurability(item.getDurability());
 		Reflection.field("name").ofType(String.class).in(this)
 				.set("name." + item.getName());
-		Reflection.field("damage").ofType(int.class).in(this)
+		Reflection.field("co").ofType(int.class).in(this)
 				.set((int) item.getDamage());
 	}
 

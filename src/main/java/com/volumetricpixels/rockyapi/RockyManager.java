@@ -23,12 +23,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import net.minecraft.server.CraftingManager;
-import net.minecraft.server.ItemStack;
-import net.minecraft.server.RecipesFurnace;
+import net.minecraft.server.v1_4_6.CraftingManager;
+import net.minecraft.server.v1_4_6.ItemStack;
+import net.minecraft.server.v1_4_6.RecipesFurnace;
 
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
+
+import org.bukkit.craftbukkit.v1_4_6.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 import com.volumetricpixels.rockyapi.inventory.RockyFurnaceRecipe;
@@ -272,10 +273,10 @@ public final class RockyManager {
 			Integer material = ingredient.get(character);
 
 			data[i++] = character;
-			data[i++] = new CraftItemStack(material, 1).getHandle();
+			data[i++] = new ItemStack(material, 1, 0);
 		}
 		CraftingManager.getInstance().registerShapedRecipe(
-				new CraftItemStack(recipe.getResult()).getHandle(), data);
+				CraftItemStack.asNMSCopy(recipe.getResult()), data);
 	}
 
 	/**
@@ -286,10 +287,11 @@ public final class RockyManager {
 		Material[] array = recipe.getIngredientList().toArray(new Material[0]);
 		Object[] stackArray = new ItemStack[array.length];
 		for (int i = 0; i < array.length; i++) {
-			stackArray[i] = new CraftItemStack(array[i].getId(), 1).getHandle();
+			stackArray[i] = new ItemStack(array[i].getId(), 1,
+					array[i].getMaxDurability());
 		}
 		CraftingManager.getInstance().registerShapelessRecipe(
-				new CraftItemStack(recipe.getResult()).getHandle(), stackArray);
+				CraftItemStack.asNMSCopy(recipe.getResult()), stackArray);
 	}
 
 	/**
@@ -298,7 +300,7 @@ public final class RockyManager {
 	 */
 	public static void addToFurnaceManager(RockyFurnaceRecipe recipe) {
 		RecipesFurnace.getInstance().registerRecipe(recipe.getIngredient(),
-				new CraftItemStack(recipe.getResult()).getHandle(),
+				CraftItemStack.asNMSCopy(recipe.getResult()),
 				(float) recipe.getSpeed());
 	}
 

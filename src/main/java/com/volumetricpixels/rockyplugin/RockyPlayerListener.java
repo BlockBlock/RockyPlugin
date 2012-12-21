@@ -19,10 +19,10 @@
  */
 package com.volumetricpixels.rockyplugin;
 
-import net.minecraft.server.PlayerManager;
+import net.minecraft.server.v1_4_6.PlayerChunkMap;
 
 import org.bukkit.World;
-import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_6.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -111,8 +111,8 @@ public class RockyPlayerListener implements Listener {
 	public void onWorldInit(WorldInitEvent event) {
 		World world = event.getWorld();
 
-		Invoker<PlayerManager> pm = Reflection.field("manager")
-				.ofType(PlayerManager.class)
+		Invoker<PlayerChunkMap> pm = Reflection.field("manager")
+				.ofType(PlayerChunkMap.class)
 				.in(((CraftWorld) world).getHandle());
 		pm.set(new RockyPlayerServerManager(pm.get()));
 	}

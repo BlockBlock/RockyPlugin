@@ -19,8 +19,8 @@
  */
 package com.volumetricpixels.rockyplugin.block;
 
-import net.minecraft.server.Block;
-import net.minecraft.server.StepSound;
+import net.minecraft.server.v1_4_6.Block;
+import net.minecraft.server.v1_4_6.StepSound;
 
 import org.fest.reflect.core.Reflection;
 

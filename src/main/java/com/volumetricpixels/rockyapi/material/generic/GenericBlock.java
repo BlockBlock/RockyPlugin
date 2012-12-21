@@ -59,8 +59,8 @@ public class GenericBlock implements Block {
 	private ItemStack dropStack;
 	private List<BlockDesign> design = new LinkedList<BlockDesign>();
 	private boolean allowRotation;
-	private net.minecraft.server.Material material;
-	
+	private net.minecraft.server.v1_4_6.Material material;
+
 	/**
 	 * 
 	 */
@@ -115,7 +115,7 @@ public class GenericBlock implements Block {
 	public int getDefaultId() {
 		return 1;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -137,8 +137,8 @@ public class GenericBlock implements Block {
 				MaterialEnumType.BLOCK);
 		this.allowRotation = section.getBoolean("Rotation", false);
 		this.blockItem = new GenericItem(plugin, name);
-		this.blockItem.setCreativeTab(MaterialTab.valueOf(section
-				.getString("CreativeTab", "BLOCK")));
+		this.blockItem.setCreativeTab(MaterialTab.valueOf(section.getString(
+				"CreativeTab", "BLOCK")));
 		setStepSound(section.getString("StepSound", "stone"));
 		this.friction = (float) section.getDouble("Friction", 0.6f);
 		this.hardness = (float) section.getDouble("Hardness", 1.5f);
@@ -156,7 +156,8 @@ public class GenericBlock implements Block {
 			shapeFile = Block.DEFAULT_SHAPE;
 		}
 		if (!pack.hasEntry(textureFile)) {
-			throw new IllegalArgumentException(textureFile + " cannot be found.");
+			throw new IllegalArgumentException(textureFile
+					+ " cannot be found.");
 		}
 		Texture texture = null;
 		if (RockyManager.getResourceManager().hasResource(textureFile)) {
@@ -382,7 +383,7 @@ public class GenericBlock implements Block {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public net.minecraft.server.Material getMaterial() {
+	public net.minecraft.server.v1_4_6.Material getMaterial() {
 		return material;
 	}
 

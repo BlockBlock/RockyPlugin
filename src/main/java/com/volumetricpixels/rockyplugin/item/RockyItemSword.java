@@ -19,8 +19,8 @@
  */
 package com.volumetricpixels.rockyplugin.item;
 
-import net.minecraft.server.EnumToolMaterial;
-import net.minecraft.server.ItemSword;
+import net.minecraft.server.v1_4_6.EnumToolMaterial;
+import net.minecraft.server.v1_4_6.ItemSword;
 
 import org.fest.reflect.core.Reflection;
 

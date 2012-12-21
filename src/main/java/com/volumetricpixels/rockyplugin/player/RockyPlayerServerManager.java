@@ -27,21 +27,21 @@ import org.fest.reflect.core.Reflection;
 import com.volumetricpixels.rockyapi.RockyManager;
 import com.volumetricpixels.rockyapi.player.RenderDistance;
 
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.LongHashMap;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.WorldServer;
+import net.minecraft.server.v1_4_6.EntityPlayer;
+import net.minecraft.server.v1_4_6.LongHashMap;
+import net.minecraft.server.v1_4_6.PlayerChunkMap;
+import net.minecraft.server.v1_4_6.WorldServer;
 
 /**
  * 
  */
-public class RockyPlayerServerManager extends PlayerManager {
+public class RockyPlayerServerManager extends PlayerChunkMap {
 
 	/**
 	 * 
 	 * @param instance
 	 */
-	public RockyPlayerServerManager(PlayerManager instance) {
+	public RockyPlayerServerManager(PlayerChunkMap instance) {
 		super(Reflection.field("world").ofType(WorldServer.class).in(instance)
 				.get(), 3);
 

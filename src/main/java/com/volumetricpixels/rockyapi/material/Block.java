@@ -33,7 +33,7 @@ public interface Block extends Material {
 	 * 
 	 * @return
 	 */
-	net.minecraft.server.Material getMaterial();
+	net.minecraft.server.v1_4_6.Material getMaterial();
 	/**
 	 * 
 	 * @return

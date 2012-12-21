@@ -22,8 +22,8 @@ package com.volumetricpixels.rockyapi.material.generic;
 import com.volumetricpixels.rockyapi.material.Block;
 import com.volumetricpixels.rockyapi.material.BlockType;
 
-import net.minecraft.server.Material;
-import net.minecraft.server.MaterialMapColor;
+import net.minecraft.server.v1_4_6.Material;
+import net.minecraft.server.v1_4_6.MaterialMapColor;
 
 /**
  * 
@@ -31,53 +31,53 @@ import net.minecraft.server.MaterialMapColor;
 public class GenericMaterialWrapper extends Material {
 
 	private Block block;
-	
+
 	/**
 	 * 
 	 */
 	public GenericMaterialWrapper(Block block) {
 		super(MaterialMapColor.b);
-		
+
 		this.block = block;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-    public boolean isLiquid() {
-        return block.getType() == BlockType.LIQUID;
-    }
-	
+	public boolean isLiquid() {
+		return block.getType() == BlockType.LIQUID;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-    public boolean isBuildable() {
-        return true;
-    }
-	
+	public boolean isBuildable() {
+		return true;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-    public boolean blocksLight() {
-        return block.isOpaque();
-    }
-	
+	public boolean blocksLight() {
+		return block.isOpaque();
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-    public boolean isSolid() {
-        return block.getType() == BlockType.SOLID;
-    } 
-	
+	public boolean isSolid() {
+		return block.getType() == BlockType.SOLID;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-    public boolean isBurnable() {
-        return block.getItemBlock().isAllowToBurn();
-    }
+	public boolean isBurnable() {
+		return block.getItemBlock().isAllowToBurn();
+	}
 }

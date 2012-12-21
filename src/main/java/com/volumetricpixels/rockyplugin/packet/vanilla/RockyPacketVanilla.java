@@ -19,7 +19,7 @@
  */
 package com.volumetricpixels.rockyplugin.packet.vanilla;
 
-import net.minecraft.server.Packet;
+import net.minecraft.server.v1_4_6.Packet;
 
 import com.volumetricpixels.rockyapi.packet.PacketVanilla;
 

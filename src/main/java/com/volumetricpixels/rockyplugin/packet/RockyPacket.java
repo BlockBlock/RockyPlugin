@@ -24,8 +24,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import net.minecraft.server.NetHandler;
-import net.minecraft.server.Packet;
+import net.minecraft.server.v1_4_6.Connection;
+import net.minecraft.server.v1_4_6.Packet;
 
 import com.volumetricpixels.rockyapi.RockyManager;
 import com.volumetricpixels.rockyapi.packet.PacketInputStream;
@@ -113,7 +113,7 @@ public class RockyPacket extends Packet {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void handle(NetHandler arg0) {
+	public void handle(Connection arg0) {
 		if (!(arg0 instanceof RockyPacketHandler)) {
 			return;
 		}

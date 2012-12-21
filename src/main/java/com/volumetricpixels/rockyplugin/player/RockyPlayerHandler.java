@@ -26,21 +26,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.server.DedicatedServer;
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.INetworkManager;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.NetHandler;
-import net.minecraft.server.NetServerHandler;
-import net.minecraft.server.Packet250CustomPayload;
-import net.minecraft.server.WorldServer;
+import net.minecraft.server.v1_4_6.DedicatedServer;
+import net.minecraft.server.v1_4_6.EntityPlayer;
+import net.minecraft.server.v1_4_6.INetworkManager;
+import net.minecraft.server.v1_4_6.MinecraftServer;
+import net.minecraft.server.v1_4_6.Connection;
+import net.minecraft.server.v1_4_6.PlayerConnection;
+import net.minecraft.server.v1_4_6.Packet250CustomPayload;
+import net.minecraft.server.v1_4_6.WorldServer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_4_6.CraftServer;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerVelocityEvent;
@@ -123,8 +123,8 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	public RockyPlayerHandler(CraftServer server, EntityPlayer entity) {
 		super(server, entity);
 
-		if (entity.netServerHandler != null) {
-			CraftPlayer player = entity.netServerHandler.getPlayer();
+		if (entity.playerConnection != null) {
+			CraftPlayer player = entity.playerConnection.getPlayer();
 			permission = new RockyPermissibleBase(player.addAttachment(
 					Rocky.getInstance()).getPermissible());
 			permission.recalculatePermissions();
@@ -285,7 +285,7 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 */
 	@Override
 	public void setRenderDistance(RenderDistance distance) {
-		((WorldServer) getHandle().world).getPlayerManager().removePlayer(
+		((WorldServer) getHandle().world).getPlayerChunkMap().removePlayer(
 				getHandle());
 
 		if (distance.ordinal() > minimumDistance.ordinal()) {
@@ -295,7 +295,7 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 		} else {
 			currentDistance = distance;
 		}
-		((WorldServer) getHandle().world).getPlayerManager().addPlayer(
+		((WorldServer) getHandle().world).getPlayerChunkMap().addPlayer(
 				getHandle());
 	}
 
@@ -525,7 +525,7 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 */
 	@Override
 	public void sendPacket(PacketVanilla packet) {
-		getHandle().netServerHandler.sendPacket((RockyPacket) packet);
+		getHandle().playerConnection.sendPacket((RockyPacket) packet);
 	}
 
 	/**
@@ -533,7 +533,7 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 */
 	@Override
 	public void sendImmediatePacket(PacketVanilla packet) {
-		if (getHandle().netServerHandler instanceof RockyPacketHandler) {
+		if (getHandle().playerConnection instanceof RockyPacketHandler) {
 			getNetServerHandler().sendImmediatePacket((RockyPacket) packet);
 		} else {
 			sendPacket(packet);
@@ -1102,10 +1102,10 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 * @return
 	 */
 	public RockyPacketHandler getNetServerHandler() {
-		if (!(getHandle().netServerHandler instanceof RockyPacketHandler)) {
+		if (!(getHandle().playerConnection instanceof RockyPacketHandler)) {
 			updateNetworkEntry(this);
 		}
-		return (RockyPacketHandler) getHandle().netServerHandler;
+		return (RockyPacketHandler) getHandle().playerConnection;
 	}
 
 	/**
@@ -1130,22 +1130,23 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	public static void updateNetworkEntry(Player player) {
 		CraftPlayer cp = (CraftPlayer) player;
 
-		NetServerHandler oldHandler = cp.getHandle().netServerHandler;
+		PlayerConnection oldHandler = cp.getHandle().playerConnection;
 		Location loc = player.getLocation();
 		RockyPacketHandler handler = new RockyPacketHandler(
 				MinecraftServer.getServer(),
-				cp.getHandle().netServerHandler.networkManager, cp.getHandle());
+				cp.getHandle().playerConnection.networkManager, cp.getHandle());
 		handler.a(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(),
 				loc.getPitch());
 
-		cp.getHandle().netServerHandler = handler;
+		cp.getHandle().playerConnection = handler;
 		INetworkManager nm = handler.networkManager;
-		Reflection.field("packetListener").ofType(NetHandler.class).in(nm)
+		Reflection.field("packetListener").ofType(Connection.class).in(nm)
 				.set(handler);
 
-		List<NetServerHandler> handleList = (List<NetServerHandler>) Reflection
+		List<PlayerConnection> handleList = (List<PlayerConnection>) Reflection
 				.field("d").ofType(List.class)
 				.in(((DedicatedServer) MinecraftServer.getServer()).ae()).get();
+		
 		handleList.remove(oldHandler);
 		handleList.add(handler);
 

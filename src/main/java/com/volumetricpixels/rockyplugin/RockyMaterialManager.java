@@ -242,7 +242,7 @@ public final class RockyMaterialManager implements MaterialManager {
 			itemList.put(material.getId(), (Item) material);
 
 			try {
-				net.minecraft.server.Item.byId[material.getId()] = (net.minecraft.server.Item) referenceClazz
+				net.minecraft.server.v1_4_6.Item.byId[material.getId()] = (net.minecraft.server.v1_4_6.Item) referenceClazz
 						.get(material.getClass())
 						.getConstructor(Material.class).newInstance(material);
 			} catch (InstantiationException e) {
@@ -256,7 +256,7 @@ public final class RockyMaterialManager implements MaterialManager {
 		}
 		blockList.put(material.getId(), (Block) material);
 		try {
-			net.minecraft.server.Block.byId[material.getId()] = (net.minecraft.server.Block) referenceClazz
+			net.minecraft.server.v1_4_6.Block.byId[material.getId()] = (net.minecraft.server.v1_4_6.Block) referenceClazz
 					.get(material.getClass()).getConstructor(Material.class)
 					.newInstance(material);
 		} catch (InstantiationException e) {
@@ -286,11 +286,11 @@ public final class RockyMaterialManager implements MaterialManager {
 		}
 		if (material instanceof Item) {
 			itemList.remove(material.getId());
-			net.minecraft.server.Item.byId[material.getId()] = null;
+			net.minecraft.server.v1_4_6.Item.byId[material.getId()] = null;
 			return;
 		}
 		blockList.remove(material.getId());
-		net.minecraft.server.Block.byId[material.getId()] = null;
+		net.minecraft.server.v1_4_6.Block.byId[material.getId()] = null;
 		deleteMaterial(((Block) material).getItemBlock());
 	}
 
@@ -327,7 +327,7 @@ public final class RockyMaterialManager implements MaterialManager {
 			if (!file.getName().endsWith(".smp")) {
 				continue;
 			}
-			
+
 			// Load the package
 			ZipFile zipFile = null;
 			try {
@@ -407,7 +407,7 @@ public final class RockyMaterialManager implements MaterialManager {
 			if (!file.getName().endsWith(".smp")) {
 				continue;
 			}
-			
+
 			// Load the package
 			ZipFile zipFile = null;
 			try {
@@ -429,7 +429,7 @@ public final class RockyMaterialManager implements MaterialManager {
 				if (!zipEntry.getName().endsWith(".yml")) {
 					continue;
 				}
-				
+
 				// Load the configuration of the type
 				YamlConfiguration configuration = new YamlConfiguration();
 				try {

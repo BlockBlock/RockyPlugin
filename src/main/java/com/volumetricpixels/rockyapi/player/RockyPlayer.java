@@ -21,7 +21,7 @@ package com.volumetricpixels.rockyapi.player;
 
 import java.util.List;
 
-import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.v1_4_6.EntityPlayer;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
