@@ -37,6 +37,8 @@ import net.minecraft.server.v1_4_6.WorldServer;
  */
 public class RockyPlayerServerManager extends PlayerChunkMap {
 
+	private int serverDistance;
+
 	/**
 	 * 
 	 * @param instance
@@ -44,6 +46,8 @@ public class RockyPlayerServerManager extends PlayerChunkMap {
 	public RockyPlayerServerManager(PlayerChunkMap instance) {
 		super(Reflection.field("world").ofType(WorldServer.class).in(instance)
 				.get(), 3);
+
+		serverDistance = Reflection.field("e").ofType(int.class).in(instance).get();
 
 		Reflection
 				.field("managedPlayers")
@@ -122,8 +126,11 @@ public class RockyPlayerServerManager extends PlayerChunkMap {
 	 * @param viewDistance
 	 */
 	private void setDynamicViewDistance(RenderDistance distance) {
-		Reflection.field("e").ofType(int.class).in(this)
-				.set(distance.getValue());
+		int lastDistance = serverDistance;
+		if (distance.getValue() < serverDistance) {
+			lastDistance = distance.getValue();
+		}
+		Reflection.field("e").ofType(int.class).in(this).set(lastDistance);
 	}
 
 }
