@@ -61,6 +61,7 @@ public class RockyPlayerListener implements Listener {
 		RockyPlayerHandler.sendAuthentication(player);
 
 		Rocky.getInstance().addPlayerToCheckList(player);
+		RockyPlayerHandler.sendAuthentication(player);
 	}
 
 	/**

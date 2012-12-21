@@ -70,6 +70,9 @@ public class RockyPlayerServerManager extends PlayerManager {
 	 */
 	@Override
 	public void addPlayer(EntityPlayer player) {
+		if (RockyManager.getPlayerFromId(player.id) == null) {
+			return;
+		}
 		setDynamicViewDistance(RockyManager.getPlayerFromId(player.id)
 				.getRenderDistance());
 		super.addPlayer(player);
@@ -80,6 +83,9 @@ public class RockyPlayerServerManager extends PlayerManager {
 	 */
 	@Override
 	public void b(EntityPlayer player) {
+		if (RockyManager.getPlayerFromId(player.id) == null) {
+			return;
+		}
 		setDynamicViewDistance(RockyManager.getPlayerFromId(player.id)
 				.getRenderDistance());
 		super.b(player);
@@ -90,6 +96,9 @@ public class RockyPlayerServerManager extends PlayerManager {
 	 */
 	@Override
 	public void removePlayer(EntityPlayer player) {
+		if (RockyManager.getPlayerFromId(player.id) == null) {
+			return;
+		}
 		setDynamicViewDistance(RockyManager.getPlayerFromId(player.id)
 				.getRenderDistance());
 		super.removePlayer(player);
@@ -100,6 +109,9 @@ public class RockyPlayerServerManager extends PlayerManager {
 	 */
 	@Override
 	public void movePlayer(EntityPlayer player) {
+		if (RockyManager.getPlayerFromId(player.id) == null) {
+			return;
+		}
 		setDynamicViewDistance(RockyManager.getPlayerFromId(player.id)
 				.getRenderDistance());
 		super.movePlayer(player);

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.server.DedicatedServer;
 import net.minecraft.server.EntityPlayer;
@@ -44,9 +45,15 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.PermissibleBase;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 import org.fest.reflect.core.Reflection;
 
+import com.volumetricpixels.rockyapi.RockyManager;
 import com.volumetricpixels.rockyapi.math.Color;
 import com.volumetricpixels.rockyapi.packet.Packet;
 import com.volumetricpixels.rockyapi.packet.PacketVanilla;
@@ -64,6 +71,7 @@ import com.volumetricpixels.rockyapi.player.RenderDistance;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 import com.volumetricpixels.rockyapi.player.Waypoint;
 import com.volumetricpixels.rockyplugin.Rocky;
+import com.volumetricpixels.rockyplugin.RockyPermissibleBase;
 import com.volumetricpixels.rockyplugin.packet.RockyPacket;
 import com.volumetricpixels.rockyplugin.packet.RockyPacketHandler;
 
@@ -81,6 +89,7 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	private Map<String, String> titleFor;
 	private List<Integer> achievementList = new ArrayList<Integer>();
 	private long velocityAdjustment = System.currentTimeMillis();
+	private RockyPermissibleBase permission;
 
 	/**
 	 * Movement Addon variables
@@ -102,8 +111,8 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	/**
 	 * View Distance Addon
 	 */
-	private RenderDistance minimumDistance = RenderDistance.TINY;
-	private RenderDistance maximumDistance = RenderDistance.EXTREME;
+	private RenderDistance minimumDistance = RenderDistance.VERY_TINY;
+	private RenderDistance maximumDistance = RenderDistance.VERY_FAR;
 	private RenderDistance currentDistance = RenderDistance.NORMAL;
 
 	/**
@@ -113,6 +122,109 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 */
 	public RockyPlayerHandler(CraftServer server, EntityPlayer entity) {
 		super(server, entity);
+
+		if (entity.netServerHandler != null) {
+			CraftPlayer player = entity.netServerHandler.getPlayer();
+			permission = new RockyPermissibleBase(player.addAttachment(
+					Rocky.getInstance()).getPermissible());
+			permission.recalculatePermissions();
+		} else {
+			permission = new RockyPermissibleBase(new PermissibleBase(this));
+			permission.recalculatePermissions();
+		}
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isPermissionSet(String name) {
+		return permission.isPermissionSet(name);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isPermissionSet(Permission perm) {
+		return this.permission.isPermissionSet(perm);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasPermission(String name) {
+		boolean defaultResult = this.permission.hasPermission(name);
+		return defaultResult;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasPermission(Permission perm) {
+		boolean defaultResult = this.permission.hasPermission(perm);
+		return defaultResult;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public PermissionAttachment addAttachment(Plugin plugin, String name,
+			boolean value) {
+		return permission.addAttachment(plugin, name, value);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public PermissionAttachment addAttachment(Plugin plugin) {
+		return permission.addAttachment(plugin);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public PermissionAttachment addAttachment(Plugin plugin, String name,
+			boolean value, int ticks) {
+		return permission.addAttachment(plugin, name, value, ticks);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
+		return permission.addAttachment(plugin, ticks);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeAttachment(PermissionAttachment attachment) {
+		permission.removeAttachment(attachment);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void recalculatePermissions() {
+		permission.recalculatePermissions();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+		return permission.getEffectivePermissions();
 	}
 
 	/**
@@ -1045,13 +1157,14 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 * @param player
 	 */
 	public static void sendAuthentication(Player player) {
-		if (Rocky.getInstance().getConfiguration().authenticateSpout()) {
+		if (!Rocky.getInstance().getConfiguration().authenticateRocky()) {
 			return;
 		}
 		Packet250CustomPayload loginPacket = new Packet250CustomPayload(
 				"TM|Rocky", new byte[] { 0x00, 0x05, 0x50, 0x00 });
-		((RockyPlayerHandler) player).getNetServerHandler()
-				.sendImmediatePacket(loginPacket);
+
+		((RockyPlayerHandler) RockyManager.getPlayer(player))
+				.getNetServerHandler().sendImmediatePacket(loginPacket);
 	}
 
 }

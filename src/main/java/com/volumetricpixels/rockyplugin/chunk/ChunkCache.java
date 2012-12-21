@@ -17,55 +17,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.volumetricpixels.rockyapi.material;
-
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.Plugin;
-
-import com.volumetricpixels.rockyapi.resource.AddonPack;
+package com.volumetricpixels.rockyplugin.chunk;
 
 /**
  * 
  */
-public interface Material {
-	/**
-	 * 
-	 * @return
-	 */
-	int getId();
-	
-	/**
-	 * 
-	 * @return
-	 */
-	int getDefaultId();
-	
-	/**
-	 * 
-	 * @return
-	 */
-	String getName();
-
-	/**
-	 *
-	 */
-	Plugin getPlugin();
-	
-	/**
-	 * 
-	 * @param plugin
-	 * @param section
-	 * @param file
-	 * @return
-	 */
-	Material loadPreInitialization(Plugin plugin, ConfigurationSection section, AddonPack pack);
-	
-	/**
-	 * 
-	 * @param plugin
-	 * @param section
-	 * @param pack
-	 * @return
-	 */
-	Material loadPostInitialization(Plugin plugin, ConfigurationSection section, AddonPack pack);
+public class ChunkCache {
 }

@@ -1,7 +1,6 @@
 /*
  * This file is part of RockyPlugin.
  *
- * Copyright (c) 2011-2012, SpoutDev <http://www.spout.org/>
  * Copyright (c) 2011-2012, VolumetricPixels <http://www.volumetricpixels.com/>
  * RockyPlugin is licensed under the GNU Lesser General Public License.
  *
@@ -42,10 +41,10 @@ import com.volumetricpixels.rockyapi.player.Waypoint;
  * 
  */
 public class RockyConfig {
-	private boolean forceClient = false;
-	private boolean authenticate = true;
-	private int authTicks = 200;
-	private String kickMessage = "This server requires Rocky!";
+	private boolean forceClient;
+	private boolean authenticate;
+	private int authTicks;
+	private String kickMessage;
 
 	private static Map<String, List<Waypoint>> waypoints = new HashMap<String, List<Waypoint>>();
 
@@ -59,7 +58,8 @@ public class RockyConfig {
 		configuration.options().copyDefaults(true);
 
 		forceClient = configuration.getBoolean("ForceClient", false);
-		kickMessage = configuration.getString("ForceClientKickMessage");
+		kickMessage = configuration.getString("ForceClientKickMessage",
+				"This server requires Rocky");
 		authTicks = configuration.getInt("AuthenticateTicks", 200);
 		authenticate = configuration.getBoolean("Authenticate", true);
 
@@ -200,7 +200,7 @@ public class RockyConfig {
 	 * 
 	 * @return
 	 */
-	public boolean authenticateSpout() {
+	public boolean authenticateRocky() {
 		return authenticate;
 	}
 

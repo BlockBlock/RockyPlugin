@@ -7,7 +7,7 @@
 	<name>RockyPlugin</name>
 	<groupId>com.volumetricpixels</groupId>
 	<artifactId>rockyplugin</artifactId>
-	<version>1.4.2-R0.1-SNAPSHOT</version>
+	<version>1.4.5-R3.0-SNAPSHOT</version>
 	<url>http://www.volumetricpixels.com</url>
 	<inceptionYear>2011</inceptionYear>
 	<description>RockyPlugin</description>
@@ -16,9 +16,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<currentYear>2012</currentYear>
-		<craftbukkitVersion>1.4.2-R0.1-SNAPSHOT</craftbukkitVersion>
-		<minecraftVersion>1.4.2</minecraftVersion>
-		<buildNumber>120</buildNumber>
+		<craftbukkitVersion>1.4.5-R3.0-SNAPSHOT</craftbukkitVersion>
+		<minecraftVersion>1.4.5</minecraftVersion>
+		<buildNumber>190</buildNumber>
 	</properties>
 
 	<!-- Company information -->
@@ -63,8 +63,9 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
-			<version>${craftbukkitVersion}</version>
-			<scope>provided</scope>
+			<version>1.4.5</version>
+   		    <scope>system</scope>
+    		<systemPath>${project.basedir}/craftbukkit-1.4.5-R0.3-SNAPSHOT_300_puremin.jar</systemPath>
 		</dependency>
 		<!-- Included in the final JAR -->
 		<dependency>

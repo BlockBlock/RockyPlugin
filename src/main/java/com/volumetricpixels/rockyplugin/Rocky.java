@@ -200,15 +200,27 @@ public class Rocky extends JavaPlugin implements Runnable {
 			// Remove the player and kick it
 			if (tickLeft == 0) {
 				playerTimer.remove(name);
-				if ((configuration.isForceClient() && !player
-						.hasPermission(RockyPermission.FORCE_CLIENT.getNode()))) {
+				if (configuration.isForceClient()) {
 					Bukkit.getServer()
 							.getPluginManager()
 							.callEvent(
 									new RockyFailedEvent((RockyPlayer) player));
 					RockyManager.printConsole("Kicking " + player.getName()
 							+ " for not running Rocky");
-					player.kickPlayer(configuration.getKickMessage());
+
+					RockyManager.getPlayer(player).getHandle().netServerHandler.networkManager
+							.a(configuration.getKickMessage(), new Object[0]);
+				} else if (player.hasPermission(RockyPermission.FORCE_CLIENT
+						.getNode())) {
+					Bukkit.getServer()
+							.getPluginManager()
+							.callEvent(
+									new RockyFailedEvent((RockyPlayer) player));
+					RockyManager.printConsole("Kicking " + player.getName()
+							+ " for not running Rocky when has been forced");
+
+					RockyManager.getPlayer(player).getHandle().netServerHandler.networkManager
+							.a(configuration.getKickMessage(), new Object[0]);
 				}
 			} else {
 				playerTimer.put(name, tickLeft);
