@@ -1140,7 +1140,7 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 
 		cp.getHandle().playerConnection = handler;
 		INetworkManager nm = handler.networkManager;
-		Reflection.field("packetListener").ofType(Connection.class).in(nm)
+		Reflection.field("connection").ofType(Connection.class).in(nm)
 				.set(handler);
 
 		List<PlayerConnection> handleList = (List<PlayerConnection>) Reflection
