@@ -27,6 +27,7 @@ import net.minecraft.server.v1_4_6.EntityPlayer;
 import net.minecraft.server.v1_4_6.INetworkManager;
 import net.minecraft.server.v1_4_6.ItemStack;
 import net.minecraft.server.v1_4_6.MinecraftServer;
+import net.minecraft.server.v1_4_6.Packet51MapChunk;
 import net.minecraft.server.v1_4_6.PlayerConnection;
 import net.minecraft.server.v1_4_6.Packet;
 import net.minecraft.server.v1_4_6.Packet103SetSlot;
@@ -49,7 +50,7 @@ import com.volumetricpixels.rockyapi.player.RenderDistance;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 import com.volumetricpixels.rockyplugin.Rocky;
 import com.volumetricpixels.rockyplugin.RockyMaterialManager;
-import com.volumetricpixels.rockyplugin.chunk.CacheWorker;
+import com.volumetricpixels.rockyplugin.chunk.WorldCacheWorker;
 
 /**
  * 
@@ -157,7 +158,7 @@ public class RockyPacketHandler extends PlayerConnection {
 	 * @param packet
 	 */
 	public void queueOutputPacket(Packet packet) {
-		if (packet == null || checkForMapChunkBulkCache(packet)) {
+		if (packet == null) {
 			return;
 		}
 		resyncQueue.addLast(packet);
@@ -205,22 +206,20 @@ public class RockyPacketHandler extends PlayerConnection {
 	}
 
 	/**
-	 * Handle the cancelation of a packet for cache a critical packet that its
-	 * the map chunk packet. The one that is sended everytime we need to query a
-	 * chunk from the server
+	 * Check if the packet is 0x33 or 0x36 for chunk cache
 	 * 
 	 * @param packet
 	 */
 	private boolean checkForMapChunkBulkCache(Packet packet) {
-		if (!(packet instanceof Packet56MapChunkBulk)) {
+		if (!(packet instanceof Packet56MapChunkBulk)
+				&& !(packet instanceof Packet51MapChunk)) {
 			return false;
 		}
 		RockyPlayer player = RockyManager.getPlayer(getPlayer());
 		if (player == null || !player.isModded()) {
 			return false;
 		}
-		threadService.submit(new CacheWorker(this,
-				(Packet56MapChunkBulk) packet));
+		threadService.submit(new WorldCacheWorker(this, packet));
 		return true;
 	}
 
