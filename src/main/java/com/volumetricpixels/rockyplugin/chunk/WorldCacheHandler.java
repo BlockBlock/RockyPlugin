@@ -19,9 +19,31 @@
  */
 package com.volumetricpixels.rockyplugin.chunk;
 
-/**
- * 
- */
-public class ChunkObserver {
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * Handler of the entire cache system
+ */
+public class WorldCacheHandler {
+	/**
+	 * List of every world in the cache
+	 */
+	protected static Map<String, WorldCache> cache = new HashMap<String, WorldCache>();
+
+	/**
+	 * Gets the cache for a world
+	 * 
+	 * @param name
+	 *            the name of the world
+	 * @return the structure of the cache
+	 */
+	public static WorldCache getWorld(String name) {
+		if (!cache.containsKey(name)) {
+			cache.put(name, new WorldCache());
+		}
+		return cache.get(name);
+	}
+
+	
 }

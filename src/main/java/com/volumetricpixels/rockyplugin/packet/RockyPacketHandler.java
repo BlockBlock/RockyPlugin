@@ -19,6 +19,8 @@
  */
 package com.volumetricpixels.rockyplugin.packet;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import net.minecraft.server.v1_4_6.EntityPlayer;
@@ -34,6 +36,7 @@ import net.minecraft.server.v1_4_6.Packet14BlockDig;
 import net.minecraft.server.v1_4_6.Packet204LocaleAndViewDistance;
 import net.minecraft.server.v1_4_6.Packet20NamedEntitySpawn;
 import net.minecraft.server.v1_4_6.Packet250CustomPayload;
+import net.minecraft.server.v1_4_6.Packet56MapChunkBulk;
 import net.minecraft.server.v1_4_6.Packet29DestroyEntity;
 
 import org.bukkit.Bukkit;
@@ -46,6 +49,7 @@ import com.volumetricpixels.rockyapi.player.RenderDistance;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 import com.volumetricpixels.rockyplugin.Rocky;
 import com.volumetricpixels.rockyplugin.RockyMaterialManager;
+import com.volumetricpixels.rockyplugin.chunk.CacheWorker;
 
 /**
  * 
@@ -57,6 +61,7 @@ public class RockyPacketHandler extends PlayerConnection {
 	private static final int QUEUE_PACKET_SIZE = 9437184;
 
 	private LinkedBlockingDeque<Packet> resyncQueue = new LinkedBlockingDeque<Packet>();
+	private ExecutorService threadService;
 
 	/**
 	 * 
@@ -73,6 +78,7 @@ public class RockyPacketHandler extends PlayerConnection {
 				.in(this)
 				.set(Reflection.field("y").ofType(double.class).in(this).get()
 						- QUEUE_PACKET_SIZE);
+		threadService = Executors.newCachedThreadPool();
 	}
 
 	/**
@@ -126,9 +132,10 @@ public class RockyPacketHandler extends PlayerConnection {
 	 */
 	@Override
 	public void sendPacket(Packet packet) {
-		if (packet == null) {
+		if (packet == null || checkForMapChunkBulkCache(packet)) {
 			return;
 		}
+
 		checkForInvalidStack(packet);
 		queueOutputPacket(packet);
 		checkForPostPacket(packet);
@@ -139,7 +146,7 @@ public class RockyPacketHandler extends PlayerConnection {
 	 * @param packet
 	 */
 	public void sendImmediatePacket(Packet packet) {
-		if (packet == null) {
+		if (packet == null || checkForMapChunkBulkCache(packet)) {
 			return;
 		}
 		resyncQueue.addFirst(packet);
@@ -150,7 +157,7 @@ public class RockyPacketHandler extends PlayerConnection {
 	 * @param packet
 	 */
 	public void queueOutputPacket(Packet packet) {
-		if (packet == null) {
+		if (packet == null || checkForMapChunkBulkCache(packet)) {
 			return;
 		}
 		resyncQueue.addLast(packet);
@@ -195,6 +202,26 @@ public class RockyPacketHandler extends PlayerConnection {
 		} else {
 			super.sendPacket(packet);
 		}
+	}
+
+	/**
+	 * Handle the cancelation of a packet for cache a critical packet that its
+	 * the map chunk packet. The one that is sended everytime we need to query a
+	 * chunk from the server
+	 * 
+	 * @param packet
+	 */
+	private boolean checkForMapChunkBulkCache(Packet packet) {
+		if (!(packet instanceof Packet56MapChunkBulk)) {
+			return false;
+		}
+		RockyPlayer player = RockyManager.getPlayer(getPlayer());
+		if (player == null || !player.isModded()) {
+			return false;
+		}
+		threadService.submit(new CacheWorker(this,
+				(Packet56MapChunkBulk) packet));
+		return true;
 	}
 
 	/**
