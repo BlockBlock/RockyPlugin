@@ -19,6 +19,8 @@
  */
 package com.volumetricpixels.rockyplugin.chunk;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +42,11 @@ public class WorldCacheHandler {
 	 * List of every world in the cache
 	 */
 	protected static Map<String, WorldCache> cache = new HashMap<String, WorldCache>();
+
+	/**
+	 * The size per cache in the packet
+	 */
+	protected final static int CACHE_SIZE = 4096;
 
 	/**
 	 * Gets the cache for a world
@@ -69,6 +76,9 @@ public class WorldCacheHandler {
 				.in(packet).get();
 		int[] chunkZArray = Reflection.field("d").ofType(int[].class)
 				.in(packet).get();
+		int[] chunkBitArray = Reflection.field("a").ofType(int[].class)
+				.in(packet).get();
+
 		byte[][] chunkBuffer = Reflection.field("inflatedBuffers")
 				.ofType(byte[][].class).in(packet).get();
 
@@ -76,8 +86,8 @@ public class WorldCacheHandler {
 			int chunkX = chunkXArray[i];
 			int chunkZ = chunkZArray[i];
 
-			byte[] newByteData = handleCompression(player, chunkX, chunkZ,
-					chunkBuffer[i]);
+			byte[] newByteData = handleCompression(player, chunkBitArray[i],
+					chunkX, chunkZ, chunkBuffer[i]);
 			chunkBuffer[i] = newByteData;
 		}
 
@@ -99,8 +109,8 @@ public class WorldCacheHandler {
 
 		byte[] oldByteData = Reflection.field("inflatedBuffer")
 				.ofType(byte[].class).in(packet).get();
-		byte[] newByteData = handleCompression(player, chunkX, chunkZ,
-				oldByteData);
+		byte[] newByteData = handleCompression(player, packet.c, chunkX,
+				chunkZ, oldByteData);
 
 		Reflection.field("inflatedBuffer").ofType(byte[].class).in(packet)
 				.set(newByteData);
@@ -109,9 +119,10 @@ public class WorldCacheHandler {
 	/**
 	 * 
 	 * @param buffer
+	 * @throws IOException
 	 */
-	public static byte[] handleCompression(String playerName, double x,
-			double z, byte[] buffer) {
+	public static byte[] handleCompression(String playerName, int bitMask,
+			double x, double z, byte[] buffer) {
 		RockyPlayer player = RockyManager.getPlayer(Bukkit
 				.getPlayer(playerName));
 		WorldCache world = getWorld(player.getWorld().getName());
@@ -119,10 +130,34 @@ public class WorldCacheHandler {
 		ChunkCacheEntry chunk = world.getChunk(x, z);
 		ChunkCacheEntry playerChunk = world.getPlayerChunk(playerName, x, z);
 
-		// TODO: Check section and check if both is good and send the data with
-		// the hash to the client
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		return null;
+		// Loop though the whole 16x256x16 by doing 16x16x16
+		byte[] chunkBuffer = new byte[CACHE_SIZE];
+		for (int i = 0; i < 16; i++) {
+			// If the bitmask indicates this chunk is sent, otherwise is
+			// only air
+			if ((bitMask & 1 << i) > 0) {
+				// Gets the buffer of the current section
+				System.arraycopy(buffer, CACHE_SIZE * (i + 1), chunkBuffer,
+						0x0000, CACHE_SIZE);
+
+				// Calculate the chunk buffer
+				chunk.entry[i] = WorldCache.calculateHash(chunkBuffer);
+
+				// Check if the player has the same cache
+				if (chunk.entry[i] == playerChunk.entry[i]) {
+					out.write(0x00000000);
+				} else {
+					try {
+						out.write(chunkBuffer);
+					} catch (IOException ex) {
+					}
+				}
+			}
+			playerChunk.entry[i] = chunk.entry[i];
+		}
+		return out.toByteArray();
 	}
 
 }
