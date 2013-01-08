@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.Deflater;
 
 import org.bukkit.Bukkit;
 import org.fest.reflect.core.Reflection;
@@ -70,7 +71,8 @@ public class WorldCacheHandler {
 	 * @param packet
 	 *            the packet to handle
 	 */
-	public static void handlePacket(String player, Packet56MapChunkBulk packet) {
+	public static void handlePacket(String player, Packet56MapChunkBulk packet)
+			throws IOException {
 		int chunkLen = packet.a.length;
 		int[] chunkXArray = Reflection.field("c").ofType(int[].class)
 				.in(packet).get();
@@ -78,21 +80,26 @@ public class WorldCacheHandler {
 				.in(packet).get();
 		int[] chunkBitArray = Reflection.field("a").ofType(int[].class)
 				.in(packet).get();
+		int[] chunkExtraBitArray = Reflection.field("b").ofType(int[].class)
+				.in(packet).get();
+		boolean isSkyLight = Reflection.field("h").ofType(boolean.class)
+				.in(packet).get();
 
 		byte[][] chunkBuffer = Reflection.field("inflatedBuffers")
 				.ofType(byte[][].class).in(packet).get();
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
 		for (int i = 0; i < chunkLen; i++) {
 			int chunkX = chunkXArray[i];
 			int chunkZ = chunkZArray[i];
 
 			byte[] newByteData = handleCompression(player, chunkBitArray[i],
-					chunkX, chunkZ, chunkBuffer[i]);
-			chunkBuffer[i] = newByteData;
+					chunkExtraBitArray[i], true, isSkyLight, chunkX, chunkZ,
+					chunkBuffer[i]);
+			buffer.write(newByteData);
 		}
-
-		Reflection.field("inflatedBuffers").ofType(byte[][].class).in(packet)
-				.set(chunkBuffer);
+		Reflection.field("buildBuffer").ofType(byte[].class).in(packet)
+				.set(buffer.toByteArray());
 	}
 
 	/**
@@ -103,17 +110,25 @@ public class WorldCacheHandler {
 	 * @param packet
 	 *            the packet to handle
 	 */
-	public static void handlePacket(String player, Packet51MapChunk packet) {
+	public static void handlePacket(String player, Packet51MapChunk packet)
+			throws IOException {
 		int chunkX = packet.a;
 		int chunkZ = packet.b;
 
 		byte[] oldByteData = Reflection.field("inflatedBuffer")
 				.ofType(byte[].class).in(packet).get();
-		byte[] newByteData = handleCompression(player, packet.c, chunkX,
-				chunkZ, oldByteData);
+		byte[] newByteData = handleCompression(player, packet.c, packet.d,
+				packet.e, true, chunkX, chunkZ, oldByteData);
 
-		Reflection.field("inflatedBuffer").ofType(byte[].class).in(packet)
-				.set(newByteData);
+		Deflater deflater = new Deflater(-1);
+		deflater.setInput(newByteData, 0, newByteData.length);
+		deflater.finish();
+		byte[] buffer = new byte[newByteData.length];
+		int size = deflater.deflate(buffer);
+		deflater.end();
+
+		Reflection.field("buffer").ofType(byte[].class).in(packet).set(buffer);
+		Reflection.field("size").ofType(int.class).in(packet).set(size);
 	}
 
 	/**
@@ -122,7 +137,8 @@ public class WorldCacheHandler {
 	 * @throws IOException
 	 */
 	public static byte[] handleCompression(String playerName, int bitMask,
-			double x, double z, byte[] buffer) {
+			int extraMask, boolean isContinuos, boolean handleLight, double x,
+			double z, byte[] buffer) throws IOException {
 		RockyPlayer player = RockyManager.getPlayer(Bukkit
 				.getPlayer(playerName));
 		WorldCache world = getWorld(player.getWorld().getName());
@@ -130,17 +146,29 @@ public class WorldCacheHandler {
 		ChunkCacheEntry chunk = world.getChunk(x, z);
 		ChunkCacheEntry playerChunk = world.getPlayerChunk(playerName, x, z);
 
+		// Each chunk sended is handled by:
+		// - BlockType: Whole byte per block
+		// - BlockMetaData: Half byte per block
+		// - BlockLight: Half byte per block
+		// - SkyLight: Half byte per block (Only of handleLight is TRUE)
+		// - AddArray: Half byte per block (Only if extraMask has the bit)
+		// - BiomeArray: Whole byte per XZ coordinate (Only if isContinous is
+		// TRUE)
+		int currentIndex = 0;
+		int currentSize = 4096 + 2048 + 2048 + (handleLight ? 2048 : 0)
+				+ (isContinuos ? 256 : 0);
+		byte[] chunkBuffer = new byte[currentSize + 2048];
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		// Loop though the whole 16x256x16 by doing 16x16x16
-		byte[] chunkBuffer = new byte[CACHE_SIZE];
+		// Compute chunk number, the number of sections and the number
+		// of extra data provided by the chunk
 		for (int i = 0; i < 16; i++) {
-			// If the bitmask indicates this chunk is sent, otherwise is
-			// only air
 			if ((bitMask & 1 << i) > 0) {
-				// Gets the buffer of the current section
-				System.arraycopy(buffer, CACHE_SIZE * (i + 1), chunkBuffer,
-						0x0000, CACHE_SIZE);
+				boolean isExtraMask = ((extraMask & 1 << i) > 0);
+
+				// Gets the block cache at the current location
+				System.arraycopy(buffer, currentIndex, chunkBuffer, 0x0000,
+						currentSize + (isExtraMask ? 2048 : 0));
 
 				// Calculate the chunk buffer
 				chunk.entry[i] = WorldCache.calculateHash(chunkBuffer);
@@ -149,11 +177,11 @@ public class WorldCacheHandler {
 				if (chunk.entry[i] == playerChunk.entry[i]) {
 					out.write(0x00000000);
 				} else {
-					try {
-						out.write(chunkBuffer);
-					} catch (IOException ex) {
-					}
+					out.write(chunkBuffer);
 				}
+				currentIndex += currentSize + (isExtraMask ? 2048 : 0);
+			} else {
+				chunk.entry[i] = 0x00000000;
 			}
 			playerChunk.entry[i] = chunk.entry[i];
 		}

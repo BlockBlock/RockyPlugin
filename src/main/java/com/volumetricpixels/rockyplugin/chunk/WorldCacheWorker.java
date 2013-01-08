@@ -19,6 +19,9 @@
  */
 package com.volumetricpixels.rockyplugin.chunk;
 
+import java.io.IOException;
+
+import com.volumetricpixels.rockyapi.RockyManager;
 import com.volumetricpixels.rockyplugin.packet.RockyPacketHandler;
 
 import net.minecraft.server.v1_4_6.Packet;
@@ -42,8 +45,7 @@ public class WorldCacheWorker implements Runnable {
 	 * @param packet
 	 *            the chunk packet data
 	 */
-	public WorldCacheWorker(final RockyPacketHandler connection,
-			final Packet packet) {
+	public WorldCacheWorker(RockyPacketHandler connection, Packet packet) {
 		this.packet = packet;
 		this.connection = connection;
 	}
@@ -53,14 +55,19 @@ public class WorldCacheWorker implements Runnable {
 	 */
 	@Override
 	public void run() {
-		String player = connection.player.getName();
-		if (packet instanceof Packet56MapChunkBulk) {
-			WorldCacheHandler.handlePacket(player,
-					(Packet56MapChunkBulk) packet);
-		} else {
-			WorldCacheHandler.handlePacket(player, (Packet51MapChunk) packet);
+		try {
+			String player = connection.player.getName();
+			if (packet instanceof Packet56MapChunkBulk) {
+				WorldCacheHandler.handlePacket(player,
+						(Packet56MapChunkBulk) packet);
+			} else {
+				WorldCacheHandler.handlePacket(player,
+						(Packet51MapChunk) packet);
+			}
+			connection.queueOutputPacket(packet);
+		} catch (IOException ex) {
+			RockyManager.printConsole(ex.getLocalizedMessage());
 		}
-		connection.queueOutputPacket(packet);
 	}
 
 }
