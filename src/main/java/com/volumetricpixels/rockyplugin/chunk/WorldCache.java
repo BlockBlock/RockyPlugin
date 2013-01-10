@@ -29,12 +29,16 @@ public class WorldCache {
 	/**
 	 * The max height in a world
 	 */
-	private final static int MAX_HEIGHT = 258;
+	public final static int MAX_SIZE = 16 * 5;
 	/**
 	 * How much per Y does we partition the chunk
 	 */
-	private final static int CHUNK_PARTITION_SIZE = 16;
-
+	public final static int CHUNK_PARTITION_SIZE = 2048;
+	/**
+	 * 
+	 */
+	public final static int CHUNK_BLOCK = MAX_SIZE / CHUNK_PARTITION_SIZE;
+	
 	/**
 	 * Using table lookup Reference: http://snippets.dzone.com/tag/crc32
 	 */
@@ -95,7 +99,7 @@ public class WorldCache {
 	 * The class entry for any chunk
 	 */
 	public class ChunkCacheEntry {
-		public int[] entry = new int[MAX_HEIGHT / CHUNK_PARTITION_SIZE];
+		public int[] entry = new int[MAX_SIZE];
 	}
 
 	/**

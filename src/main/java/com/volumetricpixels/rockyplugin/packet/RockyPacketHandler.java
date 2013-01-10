@@ -217,7 +217,7 @@ public class RockyPacketHandler extends PlayerConnection {
 		}
 		RockyPlayer player = RockyManager.getPlayer(getPlayer());
 		if (player == null || !player.isModded()) {
-			// return false;
+			return false;
 		}
 		threadService.submit(new WorldCacheWorker(this, packet));
 		return true;

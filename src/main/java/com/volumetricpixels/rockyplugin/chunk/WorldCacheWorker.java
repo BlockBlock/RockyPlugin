@@ -45,7 +45,8 @@ public class WorldCacheWorker implements Runnable {
 	 * @param packet
 	 *            the chunk packet data
 	 */
-	public WorldCacheWorker(RockyPacketHandler connection, Packet packet) {
+	public WorldCacheWorker(final RockyPacketHandler connection,
+			final Packet packet) {
 		this.packet = packet;
 		this.connection = connection;
 	}

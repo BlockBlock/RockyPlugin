@@ -45,11 +45,6 @@ public class WorldCacheHandler {
 	protected static Map<String, WorldCache> cache = new HashMap<String, WorldCache>();
 
 	/**
-	 * The size per cache in the packet
-	 */
-	protected final static int CACHE_SIZE = 4096;
-
-	/**
 	 * Gets the cache for a world
 	 * 
 	 * @param name
@@ -154,38 +149,40 @@ public class WorldCacheHandler {
 		// - AddArray: Half byte per block (Only if extraMask has the bit)
 		// - BiomeArray: Whole byte per XZ coordinate (Only if isContinous is
 		// TRUE)
-		int currentIndex = 0;
-		int currentSize = 4096 + 2048 + 2048 + (handleLight ? 2048 : 0)
-				+ (isContinuos ? 256 : 0);
-		byte[] chunkBuffer = new byte[currentSize + 2048];
+		int chunkLen = buffer.length / WorldCache.CHUNK_PARTITION_SIZE;
+		if ((chunkLen & 0x7FF) != 0) {
+			chunkLen++;
+		}
+
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		byte[] chunkData = new byte[WorldCache.CHUNK_PARTITION_SIZE];
 
-		// Compute chunk number, the number of sections and the number
-		// of extra data provided by the chunk
-		for (int i = 0; i < 16; i++) {
-			if ((bitMask & 1 << i) > 0) {
-				boolean isExtraMask = ((extraMask & 1 << i) > 0);
+		// This are the primary bit of the cache, each byte
+		// contains one byte.
+		for (int i = 0; i < WorldCache.CHUNK_BLOCK; i += 8) {
+			out.write(0xFF);
+		}
 
-				// Gets the block cache at the current location
-				System.arraycopy(buffer, currentIndex, chunkBuffer, 0x0000,
-						currentSize + (isExtraMask ? 2048 : 0));
+		// For each CHUNK_PARTITION_SIZE block, check the hash of it.
+		for (int i = 0; i < chunkLen; i++) {
+			// Calculate the hash of the current block
+			System.arraycopy(buffer, i * WorldCache.CHUNK_PARTITION_SIZE,
+					chunkData, 0x0000, WorldCache.CHUNK_PARTITION_SIZE);
+			chunk.entry[i] = WorldCache.calculateHash(chunkData);
 
-				// Calculate the chunk buffer
-				chunk.entry[i] = WorldCache.calculateHash(chunkBuffer);
-
-				// Check if the player has the same cache
-				if (chunk.entry[i] == playerChunk.entry[i]) {
-					out.write(0x00000000);
-				} else {
-					out.write(chunkBuffer);
-				}
-				currentIndex += currentSize + (isExtraMask ? 2048 : 0);
-			} else {
-				chunk.entry[i] = 0x00000000;
+			// Check for the block with the player chunk
+			if (chunk.entry[i] != playerChunk.entry[i]) {
+				out.write(chunkData);
 			}
+
+			// Updates the chunk value.
 			playerChunk.entry[i] = chunk.entry[i];
+		}
+
+		// Copies the last XZ biome data.
+		if (isContinuos) {
+			out.write(buffer, buffer.length - 256, 256);
 		}
 		return out.toByteArray();
 	}
-
 }
