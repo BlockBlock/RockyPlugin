@@ -25,15 +25,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.Deflater;
 
+import net.minecraft.server.v1_4_6.Packet51MapChunk;
+import net.minecraft.server.v1_4_6.Packet56MapChunkBulk;
+
 import org.bukkit.Bukkit;
 import org.fest.reflect.core.Reflection;
 
 import com.volumetricpixels.rockyapi.RockyManager;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 import com.volumetricpixels.rockyplugin.chunk.WorldCache.ChunkCacheEntry;
-
-import net.minecraft.server.v1_4_6.Packet51MapChunk;
-import net.minecraft.server.v1_4_6.Packet56MapChunkBulk;
 
 /**
  * Handler of the entire cache system
@@ -159,7 +159,7 @@ public class WorldCacheHandler {
 
 		// This are the primary bit of the cache, each byte
 		// contains one byte.
-		for (int i = 0; i < WorldCache.CHUNK_BLOCK; i += 8) {
+		for (int i = 0; i < WorldCache.MAX_SIZE; i += 8) {
 			out.write(0xFF);
 		}
 
@@ -185,4 +185,5 @@ public class WorldCacheHandler {
 		}
 		return out.toByteArray();
 	}
+
 }

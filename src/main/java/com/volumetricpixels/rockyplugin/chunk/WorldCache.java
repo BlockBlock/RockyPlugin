@@ -34,10 +34,6 @@ public class WorldCache {
 	 * How much per Y does we partition the chunk
 	 */
 	public final static int CHUNK_PARTITION_SIZE = 2048;
-	/**
-	 * 
-	 */
-	public final static int CHUNK_BLOCK = MAX_SIZE / CHUNK_PARTITION_SIZE;
 	
 	/**
 	 * Using table lookup Reference: http://snippets.dzone.com/tag/crc32
