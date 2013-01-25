@@ -211,6 +211,9 @@ public class RockyPacketHandler extends PlayerConnection {
 	 * @param packet
 	 */
 	private boolean checkForMapChunkBulkCache(Packet packet) {
+		if (!Rocky.getInstance().getConfiguration().isCacheEnabled()) {
+			return false;
+		}
 		if (!(packet instanceof Packet56MapChunkBulk)
 				&& !(packet instanceof Packet51MapChunk)) {
 			return false;

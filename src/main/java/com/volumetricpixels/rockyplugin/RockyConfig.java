@@ -45,8 +45,9 @@ public class RockyConfig {
 	private boolean authenticate;
 	private int authTicks;
 	private String kickMessage;
-
-	private static Map<String, List<Waypoint>> waypoints = new HashMap<String, List<Waypoint>>();
+	private boolean cacheEnabled;
+	
+	private Map<String, List<Waypoint>> waypoints = new HashMap<String, List<Waypoint>>();
 
 	/**
 	 * 
@@ -62,7 +63,8 @@ public class RockyConfig {
 				"This server requires Rocky");
 		authTicks = configuration.getInt("AuthenticateTicks", 200);
 		authenticate = configuration.getBoolean("Authenticate", true);
-
+		cacheEnabled = configuration.getBoolean("CacheFeature", true);
+		
 		Rocky.getInstance().saveConfig();
 	}
 
@@ -202,6 +204,15 @@ public class RockyConfig {
 	 */
 	public boolean authenticateRocky() {
 		return authenticate;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	public boolean isCacheEnabled() {
+		return cacheEnabled;
 	}
 
 }
