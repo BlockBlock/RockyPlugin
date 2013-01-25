@@ -50,7 +50,7 @@ import com.volumetricpixels.rockyapi.player.RenderDistance;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 import com.volumetricpixels.rockyplugin.Rocky;
 import com.volumetricpixels.rockyplugin.RockyMaterialManager;
-import com.volumetricpixels.rockyplugin.chunk.WorldCacheWorker;
+import com.volumetricpixels.rockyplugin.chunk.ChunkCacheWorker;
 
 /**
  * 
@@ -219,7 +219,7 @@ public class RockyPacketHandler extends PlayerConnection {
 		if (player == null || !player.isModded()) {
 			return false;
 		}
-		threadService.submit(new WorldCacheWorker(this, packet));
+		threadService.submit(new ChunkCacheWorker(this, packet));
 		return true;
 	}
 

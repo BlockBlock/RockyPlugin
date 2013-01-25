@@ -20,43 +20,24 @@
 package com.volumetricpixels.rockyplugin.chunk;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
 import java.util.zip.Deflater;
 
 import net.minecraft.server.v1_4_6.Packet51MapChunk;
 import net.minecraft.server.v1_4_6.Packet56MapChunkBulk;
 
-import org.bukkit.Bukkit;
 import org.fest.reflect.core.Reflection;
-
-import com.volumetricpixels.rockyapi.RockyManager;
-import com.volumetricpixels.rockyapi.player.RockyPlayer;
-import com.volumetricpixels.rockyplugin.chunk.WorldCache.ChunkCacheEntry;
 
 /**
  * Handler of the entire cache system
  */
-public class WorldCacheHandler {
+public class ChunkCacheHandler {
 	/**
 	 * List of every world in the cache
 	 */
-	protected static Map<String, WorldCache> cache = new HashMap<String, WorldCache>();
-
-	/**
-	 * Gets the cache for a world
-	 * 
-	 * @param name
-	 *            the name of the world
-	 * @return the structure of the cache
-	 */
-	public static WorldCache getWorld(String name) {
-		if (!cache.containsKey(name)) {
-			cache.put(name, new WorldCache());
-		}
-		return cache.get(name);
-	}
+	protected static ChunkCache cache = new ChunkCache();
 
 	/**
 	 * Handle 0x38 packet for sending bulk chunks to a player
@@ -134,55 +115,49 @@ public class WorldCacheHandler {
 	public static byte[] handleCompression(String playerName, int bitMask,
 			int extraMask, boolean isContinuos, boolean handleLight, double x,
 			double z, byte[] buffer) throws IOException {
-		RockyPlayer player = RockyManager.getPlayer(Bukkit
-				.getPlayer(playerName));
-		WorldCache world = getWorld(player.getWorld().getName());
-
-		ChunkCacheEntry chunk = world.getChunk(x, z);
-		ChunkCacheEntry playerChunk = world.getPlayerChunk(playerName, x, z);
+		Set<Long> playerCache = cache.getPlayerCache(playerName);
 
 		// Each chunk sended is handled by:
 		// - BlockType: Whole byte per block
 		// - BlockMetaData: Half byte per block
 		// - BlockLight: Half byte per block
 		// - SkyLight: Half byte per block (Only of handleLight is TRUE)
-		// - AddArray: Half byte per block (Only if extraMask has the bit)
+		// - AddArray: Half byte per block (Only if extraMask has the bit,
+		// support for FORGE)
 		// - BiomeArray: Whole byte per XZ coordinate (Only if isContinous is
 		// TRUE)
-		int chunkLen = buffer.length / WorldCache.CHUNK_PARTITION_SIZE;
+		int chunkLen = buffer.length / ChunkCache.CHUNK_PARTITION_SIZE;
 		if ((chunkLen & 0x7FF) != 0) {
 			chunkLen++;
 		}
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		byte[] chunkData = new byte[WorldCache.CHUNK_PARTITION_SIZE];
-
-		// This are the primary bit of the cache, each byte
-		// contains one byte.
-		for (int i = 0; i < WorldCache.MAX_SIZE; i += 8) {
-			out.write(0xFF);
-		}
+		DataOutputStream dao = new DataOutputStream(out);
+		byte[] chunkData = new byte[ChunkCache.CHUNK_PARTITION_SIZE];
 
 		// For each CHUNK_PARTITION_SIZE block, check the hash of it.
 		for (int i = 0; i < chunkLen; i++) {
 			// Calculate the hash of the current block
-			System.arraycopy(buffer, i * WorldCache.CHUNK_PARTITION_SIZE,
-					chunkData, 0x0000, WorldCache.CHUNK_PARTITION_SIZE);
-			chunk.entry[i] = WorldCache.calculateHash(chunkData);
+			System.arraycopy(buffer, i * ChunkCache.CHUNK_PARTITION_SIZE,
+					chunkData, 0x0000, ChunkCache.CHUNK_PARTITION_SIZE);
+			long hash = ChunkCache.calculateHash(chunkData);
 
-			// Check for the block with the player chunk
-			if (chunk.entry[i] != playerChunk.entry[i]) {
-				out.write(chunkData);
+			// Write the hash into the packet
+			dao.writeLong(hash);
+
+			// Check for the chunk with the player cache
+			if (playerCache.add(hash)) {
+				dao.write(chunkData);
 			}
-
-			// Updates the chunk value.
-			playerChunk.entry[i] = chunk.entry[i];
 		}
 
 		// Copies the last XZ biome data.
 		if (isContinuos) {
-			out.write(buffer, buffer.length - 256, 256);
+			dao.write(buffer, buffer.length - 256, 256);
 		}
+
+		// Close the output stream and return the bytes
+		dao.close();
 		return out.toByteArray();
 	}
 

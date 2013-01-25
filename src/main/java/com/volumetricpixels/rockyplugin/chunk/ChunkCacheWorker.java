@@ -32,7 +32,7 @@ import net.minecraft.server.v1_4_6.Packet56MapChunkBulk;
  * Encapsulate a worker that does the chunk cache async, by pooling this
  * runnable into a pool thread
  */
-public class WorldCacheWorker implements Runnable {
+public class ChunkCacheWorker implements Runnable {
 
 	private Packet packet;
 	private RockyPacketHandler connection;
@@ -45,7 +45,7 @@ public class WorldCacheWorker implements Runnable {
 	 * @param packet
 	 *            the chunk packet data
 	 */
-	public WorldCacheWorker(final RockyPacketHandler connection,
+	public ChunkCacheWorker(final RockyPacketHandler connection,
 			final Packet packet) {
 		this.packet = packet;
 		this.connection = connection;
@@ -59,10 +59,10 @@ public class WorldCacheWorker implements Runnable {
 		try {
 			String player = connection.player.getName();
 			if (packet instanceof Packet56MapChunkBulk) {
-				WorldCacheHandler.handlePacket(player,
+				ChunkCacheHandler.handlePacket(player,
 						(Packet56MapChunkBulk) packet);
 			} else {
-				WorldCacheHandler.handlePacket(player,
+				ChunkCacheHandler.handlePacket(player,
 						(Packet51MapChunk) packet);
 			}
 			connection.queueOutputPacket(packet);
