@@ -50,6 +50,7 @@ import com.volumetricpixels.rockyapi.player.RenderDistance;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 import com.volumetricpixels.rockyplugin.Rocky;
 import com.volumetricpixels.rockyplugin.RockyMaterialManager;
+import com.volumetricpixels.rockyplugin.chunk.ChunkCacheHandler;
 import com.volumetricpixels.rockyplugin.chunk.ChunkCacheWorker;
 
 /**
@@ -108,6 +109,9 @@ public class RockyPacketHandler extends PlayerConnection {
 			RockyPlayer player = (RockyPlayer) RockyManager
 					.getPlayer(getPlayer());
 			Rocky.getInstance().handlePlayerAuthentication(player);
+		} else if (packet250custompayload.tag.equals("TM|Cache")) {
+			ChunkCacheHandler.handlePacket(player.getName(),
+					packet250custompayload);
 		} else {
 			super.a(packet250custompayload);
 		}

@@ -19,12 +19,15 @@
  */
 package com.volumetricpixels.rockyplugin.chunk;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Set;
 import java.util.zip.Deflater;
 
+import net.minecraft.server.v1_4_6.Packet250CustomPayload;
 import net.minecraft.server.v1_4_6.Packet51MapChunk;
 import net.minecraft.server.v1_4_6.Packet56MapChunkBulk;
 
@@ -38,6 +41,33 @@ public class ChunkCacheHandler {
 	 * List of every world in the cache
 	 */
 	protected static ChunkCache cache = new ChunkCache();
+
+	/**
+	 * Handle packet that the player send us for nearby hashes
+	 * 
+	 * @param player
+	 *            the name of the packet
+	 * @param packet
+	 *            the packet to handle
+	 */
+	public static void handlePacket(String player, Packet250CustomPayload packet) {
+		Set<Long> playerCache = cache.getPlayerCache(player);
+
+		DataInputStream in = new DataInputStream(new ByteArrayInputStream(
+				packet.data));
+		try {
+			int hashLength = in.readInt();
+			for (int i = 0; i < hashLength; i++) {
+				playerCache.add(in.readLong());
+			}
+		} catch (IOException ex) {
+		} finally {
+			try {
+				in.close();
+			} catch (IOException ex) {
+			}
+		}
+	}
 
 	/**
 	 * Handle 0x38 packet for sending bulk chunks to a player
