@@ -20,7 +20,7 @@
 package com.volumetricpixels.rockyapi.entity;
 
 /**
- * 
+ * Implementation of a living custom entity.
  */
 public class RockyEntityLiving {
 

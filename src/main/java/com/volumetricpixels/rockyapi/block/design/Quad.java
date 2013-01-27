@@ -24,7 +24,7 @@ import com.volumetricpixels.rockyapi.math.Vector3f;
 import com.volumetricpixels.rockyapi.resource.Texture;
 
 /**
- * 
+ * Geometry structure to define an object of 4 points.
  */
 public class Quad {
 
@@ -35,7 +35,7 @@ public class Quad {
 	private Color color = Color.WHITE;
 
 	/**
-	 * 
+	 * Default Constructor
 	 */
 	public Quad() {
 	}
@@ -79,9 +79,11 @@ public class Quad {
 	}
 
 	/**
+	 * Set the normal values of the quad
 	 * 
 	 * @param lightSource
-	 * @return
+	 *            vector that contains the vertex
+	 * @return this
 	 */
 	public Quad setLightSource(Vector3f lightSource) {
 		this.lightSource = lightSource;
@@ -89,11 +91,15 @@ public class Quad {
 	}
 
 	/**
+	 * Set the normal values of the quad
 	 * 
 	 * @param x
+	 *            the x vertex
 	 * @param y
+	 *            the y vertex
 	 * @param z
-	 * @return
+	 *            the z vertex
+	 * @return this
 	 */
 	public Quad setLightSource(float x, float y, float z) {
 		this.lightSource.set(x, y, z);
@@ -101,8 +107,9 @@ public class Quad {
 	}
 
 	/**
+	 * Gets the color of the quad
 	 * 
-	 * @return
+	 * @return the color of the quad
 	 */
 	public Color getColor() {
 		return color;
@@ -112,7 +119,8 @@ public class Quad {
 	 * Set the current color of the quad
 	 * 
 	 * @param color
-	 * @return
+	 *            the new color
+	 * @return this
 	 */
 	public Quad setColor(Color color) {
 		this.color = color;
@@ -190,8 +198,9 @@ public class Quad {
 	}
 
 	/**
+	 * Gets the quad index (Face)
 	 * 
-	 * @return
+	 * @return the quad index (Face)
 	 */
 	public int getIndex() {
 		return index;

@@ -23,7 +23,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * 
+ * Event that is called when rocky is initializing.
  */
 public class RockyLoadingEvent extends Event {
 	private static final HandlerList HANDLER = new HandlerList();
@@ -37,8 +37,9 @@ public class RockyLoadingEvent extends Event {
 	}
 
 	/**
+	 * Gets all the event's handlers
 	 * 
-	 * @return
+	 * @return all the event's handlers
 	 */
 	public static HandlerList getHandlerList() {
 		return HANDLER;

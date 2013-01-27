@@ -16,7 +16,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<currentYear>2012</currentYear>
-		<craftbukkitVersion>1.4.6-R0.1-SNAPSHOT</craftbukkitVersion>
+		<craftbukkitVersion>1.4.6-R0.2-SNAPSHOT</craftbukkitVersion>
 		<minecraftVersion>1.4.6</minecraftVersion>
 		<buildNumber>210</buildNumber>
 	</properties>
@@ -59,14 +59,7 @@
 
 	<!-- Project dependencies -->
 	<dependencies>
-		<!-- Provided by third-party
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit</artifactId>
-			<version>1.4.5</version>
-   		    <scope>system</scope>
-    		<systemPath>${project.basedir}/craftbukkit-1.4.5-R0.3-SNAPSHOT_300_puremin.jar</systemPath>
-		</dependency>-->
+		<!-- Provided by third-party -->
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>

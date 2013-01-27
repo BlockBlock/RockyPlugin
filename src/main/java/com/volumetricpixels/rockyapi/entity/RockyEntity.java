@@ -20,7 +20,7 @@
 package com.volumetricpixels.rockyapi.entity;
 
 /**
- * 
+ * Encapsulate a custom entity.
  */
 public class RockyEntity {
 }

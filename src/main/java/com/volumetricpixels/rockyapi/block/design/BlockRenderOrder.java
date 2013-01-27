@@ -20,15 +20,15 @@
 package com.volumetricpixels.rockyapi.block.design;
 
 /**
- * 
+ * Encapsulate the order of the block rendering
  */
 public enum BlockRenderOrder {
 	/**
-	 * 
+	 * The block is opaque
 	 */
 	OPAQUE,
 	/**
-	 * 
+	 * The block is transparent (Ej Glass)
 	 */
 	TRANSPARENT;
 }

@@ -25,7 +25,7 @@ import org.bukkit.event.HandlerList;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 
 /**
- * 
+ * Event that is called when a player sees another player.
  */
 public class PlayerEnterPlayerArea extends Event {
 	private static final HandlerList HANDLER = new HandlerList();
@@ -33,9 +33,12 @@ public class PlayerEnterPlayerArea extends Event {
 	private final RockyPlayer trigger;
 
 	/**
+	 * Default constructor
 	 * 
 	 * @param player
+	 *            the player viewer
 	 * @param trigger
+	 *            the player that enters another player view area
 	 */
 	public PlayerEnterPlayerArea(RockyPlayer player, RockyPlayer trigger) {
 		this.player = player;
@@ -45,20 +48,21 @@ public class PlayerEnterPlayerArea extends Event {
 	/**
 	 * Gets the player associated with this event.
 	 * 
-	 * @return
+	 * @return the player associated with this event
 	 */
 	public RockyPlayer getPlayer() {
 		return player;
 	}
 
 	/**
+	 * Gets the player that enters the player's view area.
 	 * 
-	 * @return
+	 * @return the player that enters the player's view area
 	 */
 	public RockyPlayer getTriggerPlayer() {
 		return trigger;
 	}
-	
+
 	/**
 	 * {@inhericDoc}
 	 */
@@ -68,8 +72,9 @@ public class PlayerEnterPlayerArea extends Event {
 	}
 
 	/**
+	 * Gets all the event's handlers
 	 * 
-	 * @return
+	 * @return all the event's handlers
 	 */
 	public static HandlerList getHandlerList() {
 		return HANDLER;

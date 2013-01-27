@@ -25,7 +25,7 @@ import org.bukkit.event.HandlerList;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 
 /**
- * 
+ * Event that is called when rocky has been enabled
  */
 public class RockyEnableEvent extends Event {
 	private static final HandlerList HANDLER = new HandlerList();
@@ -57,8 +57,9 @@ public class RockyEnableEvent extends Event {
 	}
 
 	/**
+	 * Gets all the event's handlers
 	 * 
-	 * @return
+	 * @return all the event's handlers
 	 */
 	public static HandlerList getHandlerList() {
 		return HANDLER;

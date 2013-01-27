@@ -26,7 +26,7 @@ import com.volumetricpixels.rockyapi.keyboard.KeyBinding;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 
 /**
- * 
+ * Event that is called when a player stroke a key.
  */
 public class KeyBindingEvent extends Event {
 	private static final HandlerList HANDLER = new HandlerList();
@@ -34,9 +34,12 @@ public class KeyBindingEvent extends Event {
 	private final RockyPlayer player;
 
 	/**
+	 * Default constructor
 	 * 
 	 * @param player
+	 *            the player
 	 * @param binding
+	 *            the bind
 	 */
 	public KeyBindingEvent(RockyPlayer player, KeyBinding binding) {
 		this.binding = binding;
@@ -44,16 +47,18 @@ public class KeyBindingEvent extends Event {
 	}
 
 	/**
+	 * Gets the binding that was trigger
 	 * 
-	 * @return
+	 * @return the binding that was trigger
 	 */
 	public KeyBinding getBinding() {
 		return binding;
 	}
 
 	/**
+	 * Gets the player that press the key
 	 * 
-	 * @return
+	 * @return the player that press the key
 	 */
 	public RockyPlayer getPlayer() {
 		return player;
@@ -68,8 +73,9 @@ public class KeyBindingEvent extends Event {
 	}
 
 	/**
+	 * Gets all the event's handlers
 	 * 
-	 * @return
+	 * @return all the event's handlers
 	 */
 	public static HandlerList getHandlerList() {
 		return HANDLER;

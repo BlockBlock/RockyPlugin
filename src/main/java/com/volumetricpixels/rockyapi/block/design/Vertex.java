@@ -20,7 +20,7 @@
 package com.volumetricpixels.rockyapi.block.design;
 
 /**
- * 
+ * A single point in the 3D space.
  */
 public class Vertex {
 
@@ -30,15 +30,22 @@ public class Vertex {
 	private float color;
 
 	/**
+	 * Default constructor of the vertex
 	 * 
 	 * @param index
+	 *            the index
 	 * @param x
+	 *            the x coordinate
 	 * @param y
+	 *            the y coordinate
 	 * @param z
+	 *            the z coordinate
 	 * @param tX
+	 *            the texture x coordinate
 	 * @param tY
+	 *            the texture y coordinate
 	 * @param color
-	 *            ;
+	 *            the color ;
 	 */
 	public Vertex(int index, float x, float y, float z, float tX, float tY,
 			float color) {
@@ -52,10 +59,14 @@ public class Vertex {
 	}
 
 	/**
+	 * Sets the vertex coordinates
 	 * 
 	 * @param x
+	 *            the x coordinate
 	 * @param y
+	 *            the y coordinate
 	 * @param z
+	 *            the z coordinate
 	 */
 	public void set(float x, float y, float z) {
 		this.x = x;
@@ -64,56 +75,63 @@ public class Vertex {
 	}
 
 	/**
+	 * Gets the index of the vertex
 	 * 
-	 * @return
+	 * @return the index of the vertex
 	 */
 	public int getIndex() {
 		return index;
 	}
 
 	/**
+	 * Gets the X coordinate
 	 * 
-	 * @return
+	 * @return the X coordinate
 	 */
 	public float getX() {
 		return x;
 	}
 
 	/**
+	 * Gets the Y coordinate
 	 * 
-	 * @return
+	 * @return the Y coordinate
 	 */
 	public float getY() {
 		return y;
 	}
 
 	/**
+	 * Gets the Z coordinate
 	 * 
-	 * @return
+	 * @return the Z coordinate
 	 */
 	public float getZ() {
 		return z;
 	}
 
 	/**
+	 * Gets the X texture coordinate
 	 * 
-	 * @return
+	 * @return the X texture coordinate
 	 */
 	public float getTextureX() {
 		return tX;
 	}
 
 	/**
+	 * Gets the Y texture coordinate
 	 * 
-	 * @return
+	 * @return the Y texture coordinate
 	 */
 	public float getTextureY() {
 		return tY;
 	}
 
 	/**
+	 * Gets the color
 	 * 
-	 * @return
+	 * @return the color
 	 */
 	public float getColor() {
 		return color;

@@ -29,7 +29,7 @@ import com.volumetricpixels.rockyapi.math.Vector3f;
 import com.volumetricpixels.rockyapi.resource.Texture;
 
 /**
- * 
+ * Default implementation of {@see BlockDesign}
  */
 public final class GenericBlockDesign implements BlockDesign {
 
@@ -42,14 +42,20 @@ public final class GenericBlockDesign implements BlockDesign {
 	private BlockRenderOrder renderPass = BlockRenderOrder.OPAQUE;
 
 	/**
-	 * 
+	 * Default constructor
 	 */
 	public GenericBlockDesign() {
 	}
 
 	/**
+	 * Constructor from a file
 	 * 
 	 * @param section
+	 *            the section to load values
+	 * @param texture
+	 *            the texture of the design
+	 * @param textureIds
+	 *            the face texture ids
 	 */
 	@SuppressWarnings("unchecked")
 	public GenericBlockDesign(YamlConfiguration section, Texture texture,
@@ -245,8 +251,8 @@ public final class GenericBlockDesign implements BlockDesign {
 						+ (z1 * rotmatrix[2][2]);
 
 				tmpQuad.setColor(quad.getColor());
-				tmpQuad.addVertex(new Vertex(i, x2, y2, z2, v0.getTextureX(), v0.getTextureY(),
-						v0.getColor()));
+				tmpQuad.addVertex(new Vertex(i, x2, y2, z2, v0.getTextureX(),
+						v0.getTextureY(), v0.getColor()));
 			}
 			block.setQuad(tmpQuad);
 		}
@@ -285,8 +291,9 @@ public final class GenericBlockDesign implements BlockDesign {
 	}
 
 	/**
+	 * Calculate the light normal values of the block
 	 * 
-	 * @return
+	 * @return this instance
 	 */
 	public GenericBlockDesign calculateLightSources() {
 		Vector3f normal = new Vector3f();

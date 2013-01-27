@@ -22,7 +22,7 @@ package com.volumetricpixels.rockyapi.block.design;
 import com.volumetricpixels.rockyapi.resource.Texture;
 
 /**
- * 
+ * Encapsulate the block design for a single block.
  */
 public interface BlockDesign {
 	/**
@@ -95,15 +95,15 @@ public interface BlockDesign {
 	 *            of the second corner
 	 * @return this
 	 */
-	BlockDesign setBoundingBox(float lowX, float lowY, float lowZ,
-			float highX, float highY, float highZ);
+	BlockDesign setBoundingBox(float lowX, float lowY, float lowZ, float highX,
+			float highY, float highZ);
 
 	/**
 	 * 
 	 * @return
 	 */
 	BoundingBox getBoundingBox();
-	
+
 	/**
 	 * Sets the number of quads or faces for this block
 	 * 

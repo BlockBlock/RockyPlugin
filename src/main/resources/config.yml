@@ -2,3 +2,4 @@ ForceClient: false
 ForceClientKickMessage: This server requires Rocky!
 Authenticate: true
 AuthenticateTicks: 200
+CacheFeature: true

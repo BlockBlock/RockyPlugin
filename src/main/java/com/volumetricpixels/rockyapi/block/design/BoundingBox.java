@@ -20,7 +20,7 @@
 package com.volumetricpixels.rockyapi.block.design;
 
 /**
- * 
+ * Encapsulate a simple bounding box
  */
 public class BoundingBox {
 
@@ -32,62 +32,75 @@ public class BoundingBox {
 	private float highZBound;
 
 	/**
+	 * Gets the X of the BoundingBox
 	 * 
-	 * @return
+	 * @return the X of the BoundingBox
 	 */
 	public float getX() {
 		return lowXBound;
 	}
 
 	/**
+	 * the Y of the BoundingBox
 	 * 
-	 * @return
+	 * @return the Y of the BoundingBox
 	 */
 	public float getY() {
 		return lowYBound;
 	}
 
 	/**
+	 * the Z of the BoundingBox
 	 * 
-	 * @return
+	 * @return the Z of the BoundingBox
 	 */
 	public float getZ() {
 		return lowZBound;
 	}
 
 	/**
+	 * the X2 of the BoundingBox
 	 * 
-	 * @return
+	 * @return the X2 of the BoundingBox
 	 */
 	public float getX2() {
 		return highXBound;
 	}
 
 	/**
+	 * the Y2 of the BoundingBox
 	 * 
-	 * @return
+	 * @return the Y2 of the BoundingBox
 	 */
 	public float getY2() {
 		return highYBound;
 	}
 
 	/**
+	 * the Z2 of the BoundingBox
 	 * 
-	 * @return
+	 * @return the Z2 of the BoundingBox
 	 */
 	public float getZ2() {
 		return highZBound;
 	}
 
 	/**
+	 * Set the new values of the box
 	 * 
 	 * @param lowX
+	 *            the 'x' value
 	 * @param lowY
+	 *            the 'y' value
 	 * @param lowZ
+	 *            the 'z' value
 	 * @param highX
+	 *            the 'x2' value
 	 * @param highY
+	 *            the 'y2' value
 	 * @param highZ
-	 * @return
+	 *            the 'z2' value
+	 * @return this instance
 	 */
 	public BoundingBox set(float lowX, float lowY, float lowZ, float highX,
 			float highY, float highZ) {
@@ -101,15 +114,21 @@ public class BoundingBox {
 	}
 
 	/**
+	 * Expand the box
 	 * 
 	 * @param x
+	 *            the x value
 	 * @param y
+	 *            the y value
 	 * @param z
+	 *            the z value
+	 * @return this instance
 	 */
-	public void expand(float x, float y, float z) {
+	public BoundingBox expand(float x, float y, float z) {
 		this.highXBound += x;
 		this.highYBound += y;
 		this.highZBound += z;
+		return this;
 	}
 
 }

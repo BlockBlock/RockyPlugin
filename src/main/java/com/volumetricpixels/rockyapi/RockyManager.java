@@ -43,7 +43,7 @@ import com.volumetricpixels.rockyapi.player.RockyPlayer;
 import com.volumetricpixels.rockyapi.resource.ResourceManager;
 
 /**
- * 
+ * Encapsulate the plugin static manager
  */
 public final class RockyManager {
 	private static RockyManager instance = null;
@@ -55,12 +55,18 @@ public final class RockyManager {
 	private MaterialManager materialManager = null;
 
 	/**
+	 * Default constructor of the class
 	 * 
 	 * @param playerManager
+	 *            the player manager
 	 * @param resourceManager
+	 *            the resource manager
 	 * @param keyManager
+	 *            the key manager
 	 * @param packetManager
+	 *            the packet manager
 	 * @param materialManager
+	 *            the material manager
 	 */
 	public RockyManager(PlayerManager playerManager,
 			ResourceManager resourceManager, KeyBindingManager keyManager,
@@ -73,8 +79,10 @@ public final class RockyManager {
 	}
 
 	/**
+	 * Sets the unique instance of the plugin
 	 * 
 	 * @param instance
+	 *            the final instance
 	 */
 	public static void setInstance(RockyManager instance) {
 		if (RockyManager.instance != null) {
@@ -84,47 +92,48 @@ public final class RockyManager {
 	}
 
 	/**
-	 * Gets the singleton instance of the spout plugin
+	 * Gets the singleton instance of the rocky plugin
 	 * 
-	 * @return spout plugin
+	 * @return rocky plugin
 	 */
 	public static RockyManager getInstance() {
 		return instance;
 	}
 
 	/**
+	 * Gets the material manager of rocky
 	 * 
-	 * @return
+	 * @return the material manager of rocky
 	 */
 	public static MaterialManager getMaterialManager() {
 		return getInstance().materialManager;
 	}
 
 	/**
-	 * Gets a SpoutPlayer from the given id, or null if none found
+	 * Gets a RockyPlayer from the given id, or null if none found
 	 * 
 	 * @param entityId
-	 * @return SpoutPlayer
+	 * @return RockyPlayer
 	 */
 	public static RockyPlayer getPlayerFromId(int entityId) {
 		return getInstance().playerManager.getPlayer(entityId);
 	}
 
 	/**
-	 * Gets a SpoutPlayer from the given id, or null if none found
+	 * Gets a RockyPlayer from the given id, or null if none found
 	 * 
 	 * @param id
-	 * @return SpoutPlayer
+	 * @return RockyPlayer
 	 */
 	public static RockyPlayer getPlayerFromId(UUID id) {
 		return getInstance().playerManager.getPlayer(id);
 	}
 
 	/**
-	 * Gets a SpoutPlayer from the given bukkit player, will never fail
+	 * Gets a RockyPlayer from the given bukkit player, will never fail
 	 * 
 	 * @param player
-	 * @return SpoutPlayer
+	 * @return RockyPlayer
 	 */
 	public static RockyPlayer getPlayer(Player player) {
 		return getInstance().playerManager.getPlayer(player);
@@ -256,8 +265,10 @@ public final class RockyManager {
 	}
 
 	/**
+	 * Add a {@see RockyShapedRecipe}'s into the crafting table.
 	 * 
 	 * @param recipe
+	 *            the recipe to add into the table
 	 */
 	public static void addToCraftingManager(RockyShapedRecipe recipe) {
 		String[] shapeList = recipe.getShape();
@@ -280,8 +291,10 @@ public final class RockyManager {
 	}
 
 	/**
+	 * Add a {@see RockyShapelessRecipe}'s into the crafting table.
 	 * 
 	 * @param recipe
+	 *            the recipe to add into the table
 	 */
 	public static void addToCraftingManager(RockyShapelessRecipe recipe) {
 		Material[] array = recipe.getIngredientList().toArray(new Material[0]);
@@ -295,8 +308,10 @@ public final class RockyManager {
 	}
 
 	/**
+	 * Add a {@see RockyFurnaceRecipe}'s into the crafting table.
 	 * 
 	 * @param recipe
+	 *            the recipe to add into the table
 	 */
 	public static void addToFurnaceManager(RockyFurnaceRecipe recipe) {
 		RecipesFurnace.getInstance().registerRecipe(recipe.getIngredient(),
@@ -305,6 +320,12 @@ public final class RockyManager {
 	}
 
 	/**
+	 * Helper function to print into the console as the plugin owner.
+	 * 
+	 * @param data
+	 *            the format of the string
+	 * @param type
+	 *            the variables for the format
 	 */
 	public static void printConsole(String data, Object... type) {
 		Logger.getLogger("RockyPlugin").info(

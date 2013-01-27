@@ -26,52 +26,57 @@ import com.volumetricpixels.rockyapi.keyboard.Keyboard;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 
 /**
- * 
+ * Event that is called when a player stroke a key.
  */
 public class KeyEvent extends Event {
 	private static final HandlerList HANDLER = new HandlerList();
 	private final RockyPlayer player;
 	private final Keyboard key;
 	private final boolean isPressed;
-	
+
 	/**
+	 * Default constructor
 	 * 
 	 * @param keyPress
+	 *            the key number
 	 * @param player
-	 * @param screenType
+	 *            the player
 	 * @param isPressed
+	 *            if the key was pressed
 	 */
-	public KeyEvent(int keyPress, RockyPlayer player,
-			boolean isPressed) {
+	public KeyEvent(int keyPress, RockyPlayer player, boolean isPressed) {
 		this.player = player;
 		this.key = Keyboard.getKey(keyPress);
 		this.isPressed = isPressed;
 	}
 
 	/**
+	 * Gets the player
 	 * 
-	 * @return
+	 * @return the player
 	 */
 	public RockyPlayer getPlayer() {
 		return player;
 	}
 
 	/**
+	 * Gets the key pressed
 	 * 
-	 * @return
+	 * @return the key pressed
 	 */
 	public Keyboard getKey() {
 		return key;
 	}
 
 	/**
+	 * Gets if the key was pressed or not
 	 * 
-	 * @return
+	 * @return if the key was pressed or not
 	 */
 	public boolean isPressed() {
 		return isPressed;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -81,8 +86,9 @@ public class KeyEvent extends Event {
 	}
 
 	/**
+	 * Gets all the event's handlers
 	 * 
-	 * @return
+	 * @return all the event's handlers
 	 */
 	public static HandlerList getHandlerList() {
 		return HANDLER;
