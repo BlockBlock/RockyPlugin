@@ -22,7 +22,7 @@ package com.volumetricpixels.rockyplugin.item;
 import net.minecraft.server.v1_4_6.EntityHuman;
 import net.minecraft.server.v1_4_6.Item;
 import net.minecraft.server.v1_4_6.ItemStack;
-import net.minecraft.server.v1_4_6.World;
+import net.minecraft.server.v1_4_6	.World;
 
 import org.fest.reflect.core.Reflection;
 

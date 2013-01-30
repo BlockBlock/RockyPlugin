@@ -46,6 +46,7 @@ import org.fest.reflect.core.Reflection;
 import com.volumetricpixels.rockyapi.RockyManager;
 import com.volumetricpixels.rockyapi.event.player.PlayerEnterPlayerArea;
 import com.volumetricpixels.rockyapi.event.player.PlayerLeavePlayerArea;
+import com.volumetricpixels.rockyapi.material.Item;
 import com.volumetricpixels.rockyapi.player.RenderDistance;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 import com.volumetricpixels.rockyplugin.Rocky;
@@ -275,8 +276,9 @@ public class RockyPacketHandler extends PlayerConnection {
 		// The stack contain a custom id and we don't have a custom client
 		if (stack != null
 				&& stack.id >= RockyMaterialManager.DEFAULT_ITEM_PLACEHOLDER_ID) {
-			stack.id = RockyManager.getMaterialManager().getItem(stack.id)
-					.getDefaultId();
+			Item item = RockyManager.getMaterialManager().getItem(stack.id);
+			stack.id = item.getDefaultId();
+			stack.c(item.getName());
 		}
 	}
 

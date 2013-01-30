@@ -20,7 +20,7 @@
 package com.volumetricpixels.rockyapi.inventory;
 
 /**
- * 
+ * Encapsulate a custom achievement.
  */
 public class RockyAchievement {
 
@@ -31,10 +31,18 @@ public class RockyAchievement {
 	private RockyAchievement[] depends;
 
 	/**
+	 * Default constructor
 	 * 
+	 * @param id
+	 *            the id of the achievement
 	 * @param name
+	 *            the name of the achievement
 	 * @param description
+	 *            the description of the achievement
+	 * @param itemId
+	 *            id of the icon
 	 * @param depends
+	 *            array of dependencies
 	 */
 	public RockyAchievement(int id, String name, String description,
 			int itemId, RockyAchievement... depends) {
@@ -46,40 +54,45 @@ public class RockyAchievement {
 	}
 
 	/**
+	 * Gets the id
 	 * 
-	 * @return
+	 * @return the id
 	 */
 	public int getId() {
 		return id;
 	}
-	
+
 	/**
+	 * Gets the icon id
 	 * 
-	 * @return
+	 * @return the icon id
 	 */
 	public int getItemId() {
 		return itemId;
 	}
-	
+
 	/**
+	 * Gets the name
 	 * 
-	 * @return
+	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
+	 * Gets the description
 	 * 
-	 * @return
+	 * @return the description
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
+	 * Gets the dependencies
 	 * 
-	 * @return
+	 * @return the dependencies
 	 */
 	public RockyAchievement[] getDependency() {
 		return depends;
