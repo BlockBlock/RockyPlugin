@@ -174,7 +174,7 @@ public class GenericWeapon extends GenericItem implements Weapon {
 		this.durability = section.getInt("Durability", 100);
 		this.damage = section.getInt("Damage", 1);
 		this.attackSpeed = section.getInt("AttackSpeed", 215);
-		this.type = WeaponType.valueOf(section.getString("Type", "MELEE"));
+		this.type = WeaponType.valueOf(section.getString("Mode", "MELEE"));
 		this.isBlockAllowed = (type == WeaponType.RANGE ? false : section
 				.getBoolean("IsBlocking", true));
 		this.setStackable(false);
