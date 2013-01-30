@@ -20,6 +20,7 @@
 package com.volumetricpixels.rockyapi.material.generic;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -48,7 +49,8 @@ public class GenericItem implements Item {
 	private boolean isThrowable;
 	private MaterialTab creativeTab = MaterialTab.CUSTOM_ITEM;
 	private int defaultId = 318;
-	
+	private List<String> loreArray = new LinkedList<String>();
+
 	/**
 	 * 
 	 */
@@ -84,8 +86,8 @@ public class GenericItem implements Item {
 		this.name = name;
 		this.texture = texture;
 		this.itemID = RockyManager.getMaterialManager().getRegisteredName(name,
-				MaterialEnumType.ITEM);	
-		RockyManager.getMaterialManager().addMaterial(this);	
+				MaterialEnumType.ITEM);
+		RockyManager.getMaterialManager().addMaterial(this);
 	}
 
 	/**
@@ -111,7 +113,7 @@ public class GenericItem implements Item {
 	public int getDefaultId() {
 		return defaultId;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -207,6 +209,8 @@ public class GenericItem implements Item {
 								.get(4)));
 			}
 		}
+		loreArray = section.getStringList("Lore");
+
 		return this;
 	}
 
@@ -264,6 +268,30 @@ public class GenericItem implements Item {
 	public Item setCreativeTab(MaterialTab tab) {
 		this.creativeTab = tab;
 		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<String> getLore() {
+		return loreArray;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addLore(String description) {
+		loreArray.add(description);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeLore(String description) {
+		loreArray.remove(description);
 	}
 
 }

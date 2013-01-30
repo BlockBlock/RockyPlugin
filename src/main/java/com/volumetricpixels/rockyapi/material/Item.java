@@ -20,6 +20,7 @@
 package com.volumetricpixels.rockyapi.material;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.volumetricpixels.rockyapi.packet.PacketOutputStream;
 import com.volumetricpixels.rockyapi.resource.Texture;
@@ -28,6 +29,25 @@ import com.volumetricpixels.rockyapi.resource.Texture;
  * 
  */
 public interface Item extends Material {
+	
+	/**
+	 * 
+	 * @return
+	 */
+	List<String> getLore();
+	
+	/**
+	 * 
+	 * @param description
+	 */
+	void addLore(String description);
+	
+	/**
+	 * 
+	 * @param description
+	 */
+	void removeLore(String description);
+	
 	/**
 	 * 
 	 * @return

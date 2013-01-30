@@ -19,6 +19,7 @@
  */
 package com.volumetricpixels.rockyplugin.packet;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -27,6 +28,9 @@ import net.minecraft.server.v1_4_6.EntityPlayer;
 import net.minecraft.server.v1_4_6.INetworkManager;
 import net.minecraft.server.v1_4_6.ItemStack;
 import net.minecraft.server.v1_4_6.MinecraftServer;
+import net.minecraft.server.v1_4_6.NBTTagCompound;
+import net.minecraft.server.v1_4_6.NBTTagList;
+import net.minecraft.server.v1_4_6.NBTTagString;
 import net.minecraft.server.v1_4_6.Packet51MapChunk;
 import net.minecraft.server.v1_4_6.PlayerConnection;
 import net.minecraft.server.v1_4_6.Packet;
@@ -279,6 +283,18 @@ public class RockyPacketHandler extends PlayerConnection {
 			Item item = RockyManager.getMaterialManager().getItem(stack.id);
 			stack.id = item.getDefaultId();
 			stack.c(item.getName());
+
+			NBTTagCompound tag = stack.tag.getCompound("display");
+			NBTTagList list = tag.getList("Lore");
+			List<String> lore = item.getLore();
+
+			if (list == null && lore.size() > 0) {
+				list = new NBTTagList();
+				for (String loreName : lore) {
+					list.add(new NBTTagString(loreName));
+				}
+				tag.set("Lore", list);
+			}
 		}
 	}
 
