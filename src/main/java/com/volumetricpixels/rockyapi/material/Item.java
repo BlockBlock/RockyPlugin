@@ -44,9 +44,9 @@ public interface Item extends Material {
 	
 	/**
 	 * 
-	 * @param description
+	 * @param index
 	 */
-	void removeLore(String description);
+	void removeLore(int index);
 	
 	/**
 	 * 

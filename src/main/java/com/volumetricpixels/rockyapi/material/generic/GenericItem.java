@@ -290,8 +290,8 @@ public class GenericItem implements Item {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void removeLore(String description) {
-		loreArray.remove(description);
+	public void removeLore(int index) {
+		loreArray.remove(index);
 	}
 
 }
