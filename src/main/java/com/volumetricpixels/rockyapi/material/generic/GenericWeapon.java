@@ -58,6 +58,7 @@ public class GenericWeapon extends GenericItem implements Weapon {
 	public GenericWeapon(Plugin plugin, String name, Texture texture) {
 		super(plugin, name, texture);
 
+		setDefaultId(268);
 		setStackable(false);
 		setCreativeTab(MaterialTab.COMBAT);
 	}
@@ -68,14 +69,6 @@ public class GenericWeapon extends GenericItem implements Weapon {
 	@Override
 	public int getTypeId() {
 		return 3;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getDefaultId() {
-		return 268;
 	}
 
 	/**

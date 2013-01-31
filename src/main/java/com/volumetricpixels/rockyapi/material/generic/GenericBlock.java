@@ -60,7 +60,8 @@ public class GenericBlock implements Block {
 	private List<BlockDesign> design = new LinkedList<BlockDesign>();
 	private boolean allowRotation;
 	private net.minecraft.server.v1_4_6.Material material;
-
+	private int defaultId;
+	
 	/**
 	 * 
 	 */
@@ -75,6 +76,8 @@ public class GenericBlock implements Block {
 	 */
 	public GenericBlock(Plugin plugin, String name, BlockDesign design) {
 		this(plugin, name, false, design);
+		
+		setDefaultId(1);
 	}
 
 	/**
@@ -98,6 +101,7 @@ public class GenericBlock implements Block {
 			this.design.add(3, design.rotate(270));
 		}
 		this.design.add(0, design);
+		setDefaultId(1);
 	}
 
 	/**
@@ -113,7 +117,15 @@ public class GenericBlock implements Block {
 	 */
 	@Override
 	public int getDefaultId() {
-		return 1;
+		return defaultId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setDefaultId(int id) {
+		defaultId = id;
 	}
 
 	/**
@@ -146,7 +158,8 @@ public class GenericBlock implements Block {
 		this.light = section.getInt("LightLevel", 0);
 		this.type = BlockType.valueOf(section.getString("Type"));
 		this.material = new GenericMaterialWrapper(this);
-
+		this.defaultId = section.getInt("DefaultId", defaultId);
+		
 		// Load the shape of the block
 		String textureFile = section.getString("Texture", section.getName()
 				+ ".png");

@@ -51,6 +51,7 @@ public class GenericWeaponRange extends GenericWeapon implements WeaponRange {
 	public GenericWeaponRange(Plugin plugin, String name, Texture texture) {
 		super(plugin, name, texture);
 
+		setDefaultId(261);
 		setStackable(false);
 		setCreativeTab(MaterialTab.COMBAT);
 	}
@@ -61,14 +62,6 @@ public class GenericWeaponRange extends GenericWeapon implements WeaponRange {
 	@Override
 	public int getTypeId() {
 		return 5;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getDefaultId() {
-		return 261;
 	}
 
 	/**

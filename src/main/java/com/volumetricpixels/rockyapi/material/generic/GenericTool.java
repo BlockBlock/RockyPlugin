@@ -59,6 +59,7 @@ public class GenericTool extends GenericItem implements Tool {
 	public GenericTool(Plugin plugin, String name, Texture texture) {
 		super(plugin, name, texture);
 
+		setDefaultId(290);
 		setStackable(false);
 		setCreativeTab(MaterialTab.TOOL);
 	}
@@ -69,14 +70,6 @@ public class GenericTool extends GenericItem implements Tool {
 	@Override
 	public int getTypeId() {
 		return 2;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getDefaultId() {
-		return 290;
 	}
 	
 	/**

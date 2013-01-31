@@ -51,6 +51,7 @@ public class GenericFood extends GenericItem implements Food {
 	public GenericFood(Plugin plugin, String name, Texture texture) {
 		super(plugin, name, texture);
 		
+		setDefaultId(260);
 		setCreativeTab(MaterialTab.FOOD);
 	}
 
@@ -61,15 +62,7 @@ public class GenericFood extends GenericItem implements Food {
 	public int getTypeId() {
 		return 1;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getDefaultId() {
-		return 260;
-	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

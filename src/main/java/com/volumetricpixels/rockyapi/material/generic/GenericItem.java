@@ -40,17 +40,17 @@ import com.volumetricpixels.rockyapi.resource.Texture;
  */
 public class GenericItem implements Item {
 
-	private String name;
-	private int itemID;
-	private Plugin plugin;
-	private Texture texture;
-	private boolean isFuel;
-	private boolean isStackable;
-	private boolean isThrowable;
-	private MaterialTab creativeTab = MaterialTab.CUSTOM_ITEM;
-	private int defaultId = 318;
-	private List<String> loreArray = new LinkedList<String>();
-
+	protected String name;
+	protected int itemID;
+	protected Plugin plugin;
+	protected Texture texture;
+	protected boolean isFuel;
+	protected boolean isStackable;
+	protected boolean isThrowable;
+	protected MaterialTab creativeTab = MaterialTab.CUSTOM_ITEM;
+	protected int defaultId = 318;
+	protected List<String> loreArray = new LinkedList<String>();
+	
 	/**
 	 * 
 	 */
@@ -68,7 +68,6 @@ public class GenericItem implements Item {
 		this.itemID = RockyManager.getMaterialManager().getRegisteredName(name,
 				MaterialEnumType.ITEM);
 		RockyManager.getMaterialManager().addMaterial(this);
-		defaultId = 1;
 	}
 
 	/**
@@ -114,6 +113,14 @@ public class GenericItem implements Item {
 		return defaultId;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setDefaultId(int id) {
+		defaultId = id;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -185,6 +192,8 @@ public class GenericItem implements Item {
 		this.isFuel = section.getBoolean("BurnTime", false);
 		this.isStackable = section.getBoolean("Stackable", true);
 		this.isThrowable = section.getBoolean("Throwable", false);
+		this.defaultId = section.getInt("DefaultId", defaultId);
+	
 		List<String> data = section.getStringList("Texture");
 		if (data != null) {
 			if (data.size() == 1) {

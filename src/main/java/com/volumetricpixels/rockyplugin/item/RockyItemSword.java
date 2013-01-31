@@ -53,7 +53,7 @@ public class RockyItemSword extends ItemSword implements RockyItemType {
 		Reflection.field("name").ofType(String.class).in(this)
 				.set("name." + item.getName());
 		Reflection.field("damage").ofType(int.class).in(this)
-				.set((int) item.getDamage());
+				.set(item.getDamage());
 	}
 
 }

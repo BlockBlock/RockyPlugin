@@ -29,44 +29,43 @@ import com.volumetricpixels.rockyapi.resource.Texture;
  * 
  */
 public interface Item extends Material {
-	
 	/**
 	 * 
 	 * @return
 	 */
 	List<String> getLore();
-	
+
 	/**
 	 * 
 	 * @param description
 	 */
 	void addLore(String description);
-	
+
 	/**
 	 * 
 	 * @param index
 	 */
 	void removeLore(int index);
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	MaterialTab getCreativeTab();
-	
+
 	/**
 	 * 
 	 * @param tab
 	 * @return
 	 */
 	Item setCreativeTab(MaterialTab tab);
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	int getTypeId();
-	
+
 	/**
 	 * 
 	 * @param isFuel
@@ -89,25 +88,25 @@ public interface Item extends Material {
 	 * 
 	 */
 	boolean isStackable();
-	
+
 	/**
 	 * 
 	 */
 	Texture getTexture();
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	boolean isThrowable();
-	
+
 	/**
 	 * 
 	 * @param isThrowable
 	 * @return
 	 */
 	Item setThrowable(boolean isThrowable);
-	
+
 	/**
 	 * 
 	 * @param out

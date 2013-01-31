@@ -42,6 +42,12 @@ public interface Material {
 	
 	/**
 	 * 
+	 * @param id
+	 */
+	public void setDefaultId(int id);
+	
+	/**
+	 * 
 	 * @return
 	 */
 	String getName();

@@ -32,7 +32,11 @@ import com.volumetricpixels.rockyapi.packet.PacketListener;
 import com.volumetricpixels.rockyapi.packet.PacketVanilla;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 import com.volumetricpixels.rockyplugin.RockyMaterialManager;
-import com.volumetricpixels.rockyplugin.packet.vanilla.*;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketEntityEquipment;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketNamedEntitySpawn;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketSetCreativeSlot;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketSetSlot;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketWindowItems;
 
 /**
  * Encapsulate {@see PacketListener} for supporting custom features such as item

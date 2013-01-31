@@ -64,6 +64,7 @@ public class GenericArmor extends GenericItem implements Armor {
 		}
 		this.modelTexture = new Texture[] { frontModel, backModel };
 
+		setDefaultId(298);
 		setStackable(false);
 		setCreativeTab(MaterialTab.COMBAT);
 	}
@@ -81,17 +82,7 @@ public class GenericArmor extends GenericItem implements Armor {
 	 */
 	@Override
 	public int getDefaultId() {
-		switch (type) {
-		case HELMET:
-			return 298;
-		case BODY:
-			return 299;
-		case LEGGING:
-			return 300;
-		case BOOTS:
-			return 301;
-		}
-		return 318;
+		return defaultId;
 	}
 
 	/**
