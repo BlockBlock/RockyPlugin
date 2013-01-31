@@ -52,15 +52,6 @@ public class PacketBulkChunkData extends
 	}
 
 	/**
-	 * This is True if the packet represents all sections in this vertical
-	 * column, where the primary bit map specifies exactly which sections are
-	 * included, and which are air.
-	 */
-	public boolean[] isContinuous() {
-		return Reflection.field("h").ofType(boolean[].class).in(packet).get();
-	}
-
-	/**
 	 * Bitmask with 1 for every 16x16x16 section which data follows in the
 	 * compressed data.
 	 */
