@@ -83,11 +83,11 @@ public class RockyPlayerManager implements PlayerManager {
 	@Override
 	public RockyPlayer[] getOnlinePlayers() {
 		Player[] online = Bukkit.getServer().getOnlinePlayers();
-		RockyPlayer[] spoutPlayers = new RockyPlayer[online.length];
+		RockyPlayer[] rockyPlayers = new RockyPlayer[online.length];
 		for (int i = 0; i < online.length; i++) {
-			spoutPlayers[i] = getPlayer(online[i]);
+			rockyPlayers[i] = getPlayer(online[i]);
 		}
-		return spoutPlayers;
+		return rockyPlayers;
 	}
 
 	/**

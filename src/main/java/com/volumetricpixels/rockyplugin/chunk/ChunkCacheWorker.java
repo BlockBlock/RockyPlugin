@@ -22,11 +22,10 @@ package com.volumetricpixels.rockyplugin.chunk;
 import java.io.IOException;
 
 import com.volumetricpixels.rockyapi.RockyManager;
+import com.volumetricpixels.rockyapi.packet.PacketVanilla;
 import com.volumetricpixels.rockyplugin.packet.RockyPacketHandler;
-
-import net.minecraft.server.v1_4_6.Packet;
-import net.minecraft.server.v1_4_6.Packet51MapChunk;
-import net.minecraft.server.v1_4_6.Packet56MapChunkBulk;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketBulkChunkData;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketChunkData;
 
 /**
  * Encapsulate a worker that does the chunk cache async, by pooling this
@@ -34,7 +33,7 @@ import net.minecraft.server.v1_4_6.Packet56MapChunkBulk;
  */
 public class ChunkCacheWorker implements Runnable {
 
-	private Packet packet;
+	private PacketVanilla packet;
 	private RockyPacketHandler connection;
 
 	/**
@@ -46,7 +45,7 @@ public class ChunkCacheWorker implements Runnable {
 	 *            the chunk packet data
 	 */
 	public ChunkCacheWorker(final RockyPacketHandler connection,
-			final Packet packet) {
+			final PacketVanilla packet) {
 		this.packet = packet;
 		this.connection = connection;
 	}
@@ -58,14 +57,14 @@ public class ChunkCacheWorker implements Runnable {
 	public void run() {
 		try {
 			String player = connection.player.getName();
-			if (packet instanceof Packet56MapChunkBulk) {
+			if (packet instanceof PacketBulkChunkData) {
 				ChunkCacheHandler.handlePacket(player,
-						(Packet56MapChunkBulk) packet);
+						(PacketBulkChunkData) packet);
 			} else {
 				ChunkCacheHandler.handlePacket(player,
-						(Packet51MapChunk) packet);
+						(PacketChunkData) packet);
 			}
-			connection.queueOutputPacket(packet);
+			connection.queueOutputPacket(packet.getHandler());
 		} catch (IOException ex) {
 			RockyManager.printConsole(ex.getLocalizedMessage());
 		}

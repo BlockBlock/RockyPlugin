@@ -19,47 +19,38 @@
  */
 package com.volumetricpixels.rockyplugin.packet.vanilla;
 
-import net.minecraft.server.v1_4_6.Packet;
-
-import com.volumetricpixels.rockyapi.packet.PacketVanilla;
+import net.minecraft.server.v1_4_6.ItemStack;
+import net.minecraft.server.v1_4_6.Packet103SetSlot;
 
 /**
- * 
+ * Encapsulate a {@see RockyPacketVanilla} that implements {@see
+ * Packet103SetSlot}
  */
-public class RockyPacketVanilla<T extends Packet> implements PacketVanilla {
-
-	protected T packet;
+public class PacketSetSlot extends RockyPacketVanilla<Packet103SetSlot> {
 
 	/**
-	 * 
-	 * @param packet
+	 * Gets the window which is being updated. 0 for player inventory. Note that
+	 * all known window types include the player inventory. This packet will
+	 * only be sent for the currently opened window while the player is
+	 * performing actions, even if it affects the player inventory. After the
+	 * window is closed, a number of these packets are sent to update the
+	 * player's inventory window (0).
 	 */
-	public void setPacket(T packet) {
-		this.packet = packet;
+	public int getWindowId() {
+		return packet.a;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the slot that should be updated
 	 */
-	public T getPacket() {
-		return packet;
+	public int getSlot() {
+		return packet.b;
 	}
 
 	/**
-	 * {@inhericDoc}
+	 * Gets the item we're updating
 	 */
-	@Override
-	public int getId() {
-		return packet.k();
+	public ItemStack getItemStack() {
+		return packet.c;
 	}
-
-	/**
-	 * {@inhericDoc}
-	 */
-	@Override
-	public Packet getHandler() {
-		return packet;
-	}
-
 }

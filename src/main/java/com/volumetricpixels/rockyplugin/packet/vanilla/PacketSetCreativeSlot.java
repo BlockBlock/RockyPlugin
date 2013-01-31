@@ -17,19 +17,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.volumetricpixels.rockyapi.packet;
+package com.volumetricpixels.rockyplugin.packet.vanilla;
+
+import net.minecraft.server.v1_4_6.ItemStack;
+import net.minecraft.server.v1_4_6.Packet107SetCreativeSlot;
 
 /**
- * 
+ * Encapsulate a {@see RockyPacketVanilla} that implements {@see
+ * Packet107SetCreativeSlot}
  */
-public interface PacketVanilla {
-	/**
-	 * @return the packet id of the packet
-	 */
-	int getId();
+public class PacketSetCreativeSlot extends
+		RockyPacketVanilla<Packet107SetCreativeSlot> {
 
 	/**
-	 * @return the handler of the wrapper
+	 * Gets the inventory slot
 	 */
-	net.minecraft.server.v1_4_6.Packet getHandler();
+	public int getSlot() {
+		return packet.slot;
+	}
+
+	/**
+	 * Gets the item we're updating
+	 */
+	public ItemStack getItem() {
+		return packet.b;
+	}
 }

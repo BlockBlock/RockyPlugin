@@ -19,47 +19,67 @@
  */
 package com.volumetricpixels.rockyplugin.packet.vanilla;
 
-import net.minecraft.server.v1_4_6.Packet;
+import com.volumetricpixels.rockyapi.math.Vector3f;
 
-import com.volumetricpixels.rockyapi.packet.PacketVanilla;
+import net.minecraft.server.v1_4_6.Packet20NamedEntitySpawn;
 
 /**
- * 
+ * Encapsulate a {@see RockyPacketVanilla} that implements {@see
+ * Packet20NamedEntitySpawn}
  */
-public class RockyPacketVanilla<T extends Packet> implements PacketVanilla {
-
-	protected T packet;
+public class PacketNamedEntitySpawn extends
+		RockyPacketVanilla<Packet20NamedEntitySpawn> {
 
 	/**
+	 * Gets the entity id
+	 */
+	public int getPlayerId() {
+		return packet.a;
+	}
+
+	/**
+	 * Gets the entity name
+	 */
+	public String getPlayerName() {
+		return packet.b;
+	}
+
+	/**
+	 * Gets the position of the entity
+	 */
+	public Vector3f getPosition() {
+		return new Vector3f(packet.c, packet.d, packet.e);
+	}
+
+	/**
+	 * Gets the yaw
+	 */
+	public int getYaw() {
+		return packet.f;
+	}
+
+	/**
+	 * Gets the pitch
+	 */
+	public int getPitch() {
+		return packet.g;
+	}
+
+	/**
+	 * Gets the id of the current item equipped
+	 */
+	public int getCurrentItem() {
+		return packet.h;
+	}
+
+	/**
+	 * Sets the id of the current item
 	 * 
-	 * @param packet
+	 * @param id
+	 *            the new id of the item
 	 */
-	public void setPacket(T packet) {
-		this.packet = packet;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public T getPacket() {
-		return packet;
-	}
-
-	/**
-	 * {@inhericDoc}
-	 */
-	@Override
-	public int getId() {
-		return packet.k();
-	}
-
-	/**
-	 * {@inhericDoc}
-	 */
-	@Override
-	public Packet getHandler() {
-		return packet;
+	public void setCurrentItem(int id) {
+		packet.h = id;
 	}
 
 }

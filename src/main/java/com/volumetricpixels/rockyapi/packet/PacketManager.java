@@ -19,8 +19,6 @@
  */
 package com.volumetricpixels.rockyapi.packet;
 
-import net.minecraft.server.v1_4_6.Packet;
-
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 
 /**
@@ -33,8 +31,7 @@ public interface PacketManager {
 	 * @param vanilla
 	 * @param extended
 	 */
-	void addVanillaPacket(int id, Class<? extends Packet> vanilla,
-			Class<? extends PacketVanilla> extended);
+	void addVanillaPacket(int id, Class<? extends PacketVanilla> extended);
 
 	/**
 	 * 
@@ -42,49 +39,31 @@ public interface PacketManager {
 	 * @param packet
 	 * @return
 	 */
-	boolean isAllowedToSend(RockyPlayer player, int packet);
+	boolean isAllowedToSend(RockyPlayer player,
+			net.minecraft.server.v1_4_6.Packet packet);
 
 	/**
 	 * Returns a MCPacket instance with the default constructor.
 	 * <p/>
 	 * An id of 256 will give an uncompressed Map Chunk packet
 	 * 
-	 * @param packetId
+	 * @param packet
 	 *            the id of the desired packet
 	 * @return an empty MCPacket of type packetId
 	 */
-	PacketVanilla getInstance(int packetId);
-
-	/**
-	 * adds a packet listener for uncompressed map chunk packets
-	 * <p/>
-	 * These listeners are NOT called from within the main thread.
-	 * 
-	 * @param listener
-	 *            the listener instance
-	 */
-	void addListenerUncompressedChunk(PacketListener listener);
+	PacketVanilla getInstance(net.minecraft.server.v1_4_6.Packet packet);
 
 	/**
 	 * adds a packet listener for packets of the given id
 	 * <p/>
 	 * These listeners are called from the main server thread
 	 * 
+	 * @param listener
+	 *            the listener instance
 	 * @param packetId
 	 *            the packet id
-	 * @param listener
-	 *            the listener instance
 	 */
-	void addListener(int packetId, PacketListener listener);
-
-	/**
-	 * removes a packet listener for uncompressed map chunk packets
-	 * 
-	 * @param listener
-	 *            the listener instance
-	 * @return true if listener was removed
-	 */
-	boolean removeListenerUncompressedChunk(PacketListener listener);
+	void addListener(PacketListener listener, int... packetId);
 
 	/**
 	 * removes a packet listener for packets of the given id

@@ -19,30 +19,18 @@
  */
 package com.volumetricpixels.rockyplugin.packet;
 
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import net.minecraft.server.v1_4_6.EntityPlayer;
 import net.minecraft.server.v1_4_6.INetworkManager;
-import net.minecraft.server.v1_4_6.ItemStack;
 import net.minecraft.server.v1_4_6.MinecraftServer;
-import net.minecraft.server.v1_4_6.NBTTagCompound;
-import net.minecraft.server.v1_4_6.NBTTagList;
-import net.minecraft.server.v1_4_6.NBTTagString;
-import net.minecraft.server.v1_4_6.Packet51MapChunk;
-import net.minecraft.server.v1_4_6.PlayerConnection;
 import net.minecraft.server.v1_4_6.Packet;
-import net.minecraft.server.v1_4_6.Packet103SetSlot;
-import net.minecraft.server.v1_4_6.Packet104WindowItems;
-import net.minecraft.server.v1_4_6.Packet107SetCreativeSlot;
 import net.minecraft.server.v1_4_6.Packet14BlockDig;
 import net.minecraft.server.v1_4_6.Packet204LocaleAndViewDistance;
 import net.minecraft.server.v1_4_6.Packet20NamedEntitySpawn;
 import net.minecraft.server.v1_4_6.Packet250CustomPayload;
-import net.minecraft.server.v1_4_6.Packet56MapChunkBulk;
 import net.minecraft.server.v1_4_6.Packet29DestroyEntity;
+import net.minecraft.server.v1_4_6.PlayerConnection;
 
 import org.bukkit.Bukkit;
 import org.fest.reflect.core.Reflection;
@@ -50,13 +38,10 @@ import org.fest.reflect.core.Reflection;
 import com.volumetricpixels.rockyapi.RockyManager;
 import com.volumetricpixels.rockyapi.event.player.PlayerEnterPlayerArea;
 import com.volumetricpixels.rockyapi.event.player.PlayerLeavePlayerArea;
-import com.volumetricpixels.rockyapi.material.Item;
 import com.volumetricpixels.rockyapi.player.RenderDistance;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 import com.volumetricpixels.rockyplugin.Rocky;
-import com.volumetricpixels.rockyplugin.RockyMaterialManager;
 import com.volumetricpixels.rockyplugin.chunk.ChunkCacheHandler;
-import com.volumetricpixels.rockyplugin.chunk.ChunkCacheWorker;
 
 /**
  * 
@@ -68,7 +53,6 @@ public class RockyPacketHandler extends PlayerConnection {
 	private static final int QUEUE_PACKET_SIZE = 9437184;
 
 	private LinkedBlockingDeque<Packet> resyncQueue = new LinkedBlockingDeque<Packet>();
-	private ExecutorService threadService;
 
 	/**
 	 * 
@@ -85,7 +69,6 @@ public class RockyPacketHandler extends PlayerConnection {
 				.in(this)
 				.set(Reflection.field("y").ofType(double.class).in(this).get()
 						- QUEUE_PACKET_SIZE);
-		threadService = Executors.newCachedThreadPool();
 	}
 
 	/**
@@ -142,11 +125,9 @@ public class RockyPacketHandler extends PlayerConnection {
 	 */
 	@Override
 	public void sendPacket(Packet packet) {
-		if (packet == null || checkForMapChunkBulkCache(packet)) {
+		if (packet == null) {
 			return;
 		}
-
-		checkForInvalidStack(packet);
 		queueOutputPacket(packet);
 		checkForPostPacket(packet);
 	}
@@ -156,7 +137,7 @@ public class RockyPacketHandler extends PlayerConnection {
 	 * @param packet
 	 */
 	public void sendImmediatePacket(Packet packet) {
-		if (packet == null || checkForMapChunkBulkCache(packet)) {
+		if (packet == null) {
 			return;
 		}
 		resyncQueue.addFirst(packet);
@@ -200,101 +181,11 @@ public class RockyPacketHandler extends PlayerConnection {
 	 * @param packetWrappers
 	 */
 	private void syncedSendPacket(Packet packet) {
-		int packetId = -1;
-		try {
-			packetId = packet.k();
-		} catch (Exception e) {
-			return;
-		}
 		RockyPlayer player = (RockyPlayer) RockyManager.getPlayer(getPlayer());
-		if (!RockyManager.getPacketManager().isAllowedToSend(player, packetId)) {
+		if (!RockyManager.getPacketManager().isAllowedToSend(player, packet)) {
 			return;
 		} else {
 			super.sendPacket(packet);
-		}
-	}
-
-	/**
-	 * Check if the packet is 0x33 or 0x36 for chunk cache
-	 * 
-	 * @param packet
-	 */
-	private boolean checkForMapChunkBulkCache(Packet packet) {
-		if (!Rocky.getInstance().getConfiguration().isCacheEnabled()) {
-			return false;
-		}
-		if (!(packet instanceof Packet56MapChunkBulk)
-				&& !(packet instanceof Packet51MapChunk)) {
-			return false;
-		}
-		RockyPlayer player = RockyManager.getPlayer(getPlayer());
-		if (player == null || !player.isModded()) {
-			return false;
-		}
-		threadService.submit(new ChunkCacheWorker(this, packet));
-		return true;
-	}
-
-	/**
-	 * 
-	 * @param packet
-	 */
-	private void checkForInvalidStack(Packet packet) {
-		if (RockyManager.getPlayer(getPlayer()).isModded()) {
-			return;
-		}
-		ItemStack stack = null;
-
-		// Check all packets that use ItemStack
-		switch (packet.k()) {
-		case 0x5:
-			stack = Reflection.field("c").ofType(ItemStack.class).in(packet)
-					.get();
-			break;
-		case 0x14:
-			if (((Packet20NamedEntitySpawn) packet).h >= RockyMaterialManager.DEFAULT_ITEM_PLACEHOLDER_ID) {
-				((Packet20NamedEntitySpawn) packet).h = RockyManager
-						.getMaterialManager()
-						.getItem(((Packet20NamedEntitySpawn) packet).h)
-						.getDefaultId();
-			}
-			break;
-		case 0x67:
-			stack = ((Packet103SetSlot) packet).c;
-			break;
-		case 0x68:
-			ItemStack[] stacks = ((Packet104WindowItems) packet).b;
-			for (ItemStack itemStack : stacks) {
-				if (itemStack != null
-						&& itemStack.id >= RockyMaterialManager.DEFAULT_ITEM_PLACEHOLDER_ID) {
-					itemStack.id = RockyManager.getMaterialManager()
-							.getItem(itemStack.id).getDefaultId();
-				}
-			}
-			break;
-		case 0x6B:
-			stack = ((Packet107SetCreativeSlot) packet).b;
-			break;
-		}
-
-		// The stack contain a custom id and we don't have a custom client
-		if (stack != null
-				&& stack.id >= RockyMaterialManager.DEFAULT_ITEM_PLACEHOLDER_ID) {
-			Item item = RockyManager.getMaterialManager().getItem(stack.id);
-			stack.id = item.getDefaultId();
-			stack.c(item.getName());
-
-			NBTTagCompound tag = stack.tag.getCompound("display");
-			NBTTagList list = tag.getList("Lore");
-			List<String> lore = item.getLore();
-
-			if (list == null && lore.size() > 0) {
-				list = new NBTTagList();
-				for (String loreName : lore) {
-					list.add(new NBTTagString(loreName));
-				}
-				tag.set("Lore", list);
-			}
 		}
 	}
 

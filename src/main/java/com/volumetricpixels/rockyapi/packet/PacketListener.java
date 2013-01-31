@@ -19,7 +19,7 @@
  */
 package com.volumetricpixels.rockyapi.packet;
 
-import org.bukkit.entity.Player;
+import com.volumetricpixels.rockyapi.player.RockyPlayer;
 
 /**
  * 
@@ -32,5 +32,5 @@ public interface PacketListener {
 	 *            The packet to check
 	 * @return false if the packet should be stopped, true otherwise.
 	 */
-	boolean checkPacket(Player player, Object packet);
+	boolean checkPacket(RockyPlayer player, PacketVanilla packet);
 }

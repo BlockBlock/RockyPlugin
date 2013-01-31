@@ -33,6 +33,15 @@ import com.volumetricpixels.rockyapi.packet.PacketListener;
 import com.volumetricpixels.rockyapi.packet.PacketManager;
 import com.volumetricpixels.rockyapi.packet.PacketVanilla;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
+import com.volumetricpixels.rockyplugin.packet.listener.PacketMapCacheListener;
+import com.volumetricpixels.rockyplugin.packet.listener.PacketVanillaSupportListener;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketBulkChunkData;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketChunkData;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketEntityEquipment;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketNamedEntitySpawn;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketSetCreativeSlot;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketSetSlot;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketWindowItems;
 import com.volumetricpixels.rockyplugin.packet.vanilla.RockyPacketVanilla;
 
 /**
@@ -41,17 +50,31 @@ import com.volumetricpixels.rockyplugin.packet.vanilla.RockyPacketVanilla;
 public class RockyPacketManager implements PacketManager {
 
 	private Map<Integer, Class<? extends PacketVanilla>> corePacket = new HashMap<Integer, Class<? extends PacketVanilla>>();
-	private Map<Integer, Class<? extends Packet>> vanillaPacket = new HashMap<Integer, Class<? extends Packet>>();
 	private Map<Integer, List<PacketListener>> listenerList = new HashMap<Integer, List<PacketListener>>();
+
+	/**
+	 * Default constructor for registering all minecract packets.
+	 */
+	public RockyPacketManager() {
+		addVanillaPacket(0x5, PacketEntityEquipment.class);
+		addVanillaPacket(0x14, PacketNamedEntitySpawn.class);
+		addVanillaPacket(0x33, PacketChunkData.class);
+		addVanillaPacket(0x36, PacketBulkChunkData.class);
+		addVanillaPacket(0x67, PacketSetSlot.class);
+		addVanillaPacket(0x68, PacketWindowItems.class);
+		addVanillaPacket(0x6B, PacketSetCreativeSlot.class);
+
+		addListener(new PacketMapCacheListener(), 0x33, 0x36);
+		addListener(new PacketVanillaSupportListener(), 0x5, 0x14, 0x67, 0x68,
+				0x6B);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addVanillaPacket(int id, Class<? extends Packet> vanilla,
-			Class<? extends PacketVanilla> extended) {
+	public void addVanillaPacket(int id, Class<? extends PacketVanilla> extended) {
 		corePacket.put(id, extended);
-		vanillaPacket.put(id, vanilla);
 	}
 
 	/**
@@ -59,15 +82,12 @@ public class RockyPacketManager implements PacketManager {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public PacketVanilla getInstance(int packetId) {
-		if (vanillaPacket.containsKey(packetId)) {
+	public PacketVanilla getInstance(Packet packet) {
+		if (corePacket.containsKey(packet.k())) {
 			try {
-				Class<? extends Packet> clazz = vanillaPacket.get(packetId);
-				Packet packet = clazz.newInstance();
-
-				Class<? extends PacketVanilla> clazz2 = corePacket
-						.get(packetId);
-				Constructor<? extends PacketVanilla> constructor = clazz2
+				Class<? extends PacketVanilla> clazz = corePacket.get(packet
+						.k());
+				Constructor<? extends PacketVanilla> constructor = clazz
 						.getConstructor();
 				RockyPacketVanilla<Packet> vanilla = (RockyPacketVanilla<Packet>) constructor
 						.newInstance();
@@ -106,28 +126,14 @@ public class RockyPacketManager implements PacketManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addListenerUncompressedChunk(PacketListener listener) {
-		addListener(256, listener);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addListener(int packetId, PacketListener listener) {
-		List<PacketListener> listListener = listenerList.get(packetId);
-		if (listener == null) {
-			listListener = new ArrayList<PacketListener>();
+	public void addListener(PacketListener listener, int... packetIds) {
+		for (int packetId : packetIds) {
+			List<PacketListener> listListener = listenerList.get(packetId);
+			if (listener == null) {
+				listListener = new ArrayList<PacketListener>();
+			}
+			listListener.add(listener);
 		}
-		listListener.add(listener);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean removeListenerUncompressedChunk(PacketListener listener) {
-		return removeListener(256, listener);
 	}
 
 	/**
@@ -158,8 +164,8 @@ public class RockyPacketManager implements PacketManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isAllowedToSend(RockyPlayer player, int packet) {
-		List<PacketListener> listenerReference = listenerList.get(packet);
+	public boolean isAllowedToSend(RockyPlayer player, Packet packet) {
+		List<PacketListener> listenerReference = listenerList.get(packet.k());
 		if (listenerReference != null) {
 			PacketVanilla wrapper = getInstance(packet);
 			for (PacketListener listener : listenerReference) {

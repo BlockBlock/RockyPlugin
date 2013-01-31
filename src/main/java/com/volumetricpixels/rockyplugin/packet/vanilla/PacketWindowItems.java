@@ -17,19 +17,30 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.volumetricpixels.rockyapi.packet;
+package com.volumetricpixels.rockyplugin.packet.vanilla;
+
+import net.minecraft.server.v1_4_6.ItemStack;
+import net.minecraft.server.v1_4_6.Packet104WindowItems;
 
 /**
- * 
+ * Encapsulate a {@see RockyPacketVanilla} that implements {@see
+ * Packet104WindowItems}
  */
-public interface PacketVanilla {
-	/**
-	 * @return the packet id of the packet
-	 */
-	int getId();
+public class PacketWindowItems extends RockyPacketVanilla<Packet104WindowItems> {
 
 	/**
-	 * @return the handler of the wrapper
+	 * Gets the id of window which items are being sent for. 0 for player
+	 * inventory
 	 */
-	net.minecraft.server.v1_4_6.Packet getHandler();
+	public int getWindowId() {
+		return packet.a;
+	}
+
+	/**
+	 * Gets the array of items we're updating
+	 */
+	public ItemStack[] getItems() {
+		return packet.b;
+	}
+
 }

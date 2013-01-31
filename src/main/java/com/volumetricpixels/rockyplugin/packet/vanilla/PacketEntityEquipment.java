@@ -17,19 +17,39 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.volumetricpixels.rockyapi.packet;
+package com.volumetricpixels.rockyplugin.packet.vanilla;
+
+import org.fest.reflect.core.Reflection;
+
+import net.minecraft.server.v1_4_6.ItemStack;
+import net.minecraft.server.v1_4_6.Packet5EntityEquipment;
 
 /**
- * 
+ * Encapsulate a {@see RockyPacketVanilla} that implements {@see
+ * Packet5EntityEquipment}
  */
-public interface PacketVanilla {
-	/**
-	 * @return the packet id of the packet
-	 */
-	int getId();
+public class PacketEntityEquipment extends
+		RockyPacketVanilla<Packet5EntityEquipment> {
 
 	/**
-	 * @return the handler of the wrapper
+	 * Gets the named entity id
 	 */
-	net.minecraft.server.v1_4_6.Packet getHandler();
+	public int getEntityId() {
+		return packet.a;
+	}
+
+	/**
+	 * Gets the equipment slot
+	 */
+	public int getSlot() {
+		return packet.b;
+	}
+
+	/**
+	 * Gets the item that the entity equip
+	 */
+	public ItemStack getItem() {
+		return Reflection.field("c").ofType(ItemStack.class).in(packet).get();
+	}
+
 }

@@ -28,10 +28,11 @@ import java.util.Set;
 import java.util.zip.Deflater;
 
 import net.minecraft.server.v1_4_6.Packet250CustomPayload;
-import net.minecraft.server.v1_4_6.Packet51MapChunk;
-import net.minecraft.server.v1_4_6.Packet56MapChunkBulk;
 
 import org.fest.reflect.core.Reflection;
+
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketBulkChunkData;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketChunkData;
 
 /**
  * Handler of the entire cache system
@@ -77,22 +78,16 @@ public class ChunkCacheHandler {
 	 * @param packet
 	 *            the packet to handle
 	 */
-	public static void handlePacket(String player, Packet56MapChunkBulk packet)
+	public static void handlePacket(String player, PacketBulkChunkData packet)
 			throws IOException {
-		int chunkLen = packet.a.length;
-		int[] chunkXArray = Reflection.field("c").ofType(int[].class)
-				.in(packet).get();
-		int[] chunkZArray = Reflection.field("d").ofType(int[].class)
-				.in(packet).get();
-		int[] chunkBitArray = Reflection.field("a").ofType(int[].class)
-				.in(packet).get();
-		int[] chunkExtraBitArray = Reflection.field("b").ofType(int[].class)
-				.in(packet).get();
-		boolean isSkyLight = Reflection.field("h").ofType(boolean.class)
-				.in(packet).get();
+		int chunkLen = packet.getChunkX().length;
+		int[] chunkXArray = packet.getChunkX();
+		int[] chunkZArray = packet.getChunkZ();
+		int[] chunkBitArray = packet.getPrimaryMap();
+		int[] chunkExtraBitArray = packet.getExtraMap();
+		boolean isSkyLight = packet.isSkyLight();
 
-		byte[][] chunkBuffer = Reflection.field("inflatedBuffers")
-				.ofType(byte[][].class).in(packet).get();
+		byte[][] chunkBuffer = packet.getData();
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
 		for (int i = 0; i < chunkLen; i++) {
@@ -104,8 +99,8 @@ public class ChunkCacheHandler {
 					chunkBuffer[i]);
 			buffer.write(newByteData);
 		}
-		Reflection.field("buildBuffer").ofType(byte[].class).in(packet)
-				.set(buffer.toByteArray());
+		Reflection.field("buildBuffer").ofType(byte[].class)
+				.in(packet.getPacket()).set(buffer.toByteArray());
 	}
 
 	/**
@@ -116,15 +111,15 @@ public class ChunkCacheHandler {
 	 * @param packet
 	 *            the packet to handle
 	 */
-	public static void handlePacket(String player, Packet51MapChunk packet)
+	public static void handlePacket(String player, PacketChunkData packet)
 			throws IOException {
-		int chunkX = packet.a;
-		int chunkZ = packet.b;
+		int chunkX = packet.getChunkX();
+		int chunkZ = packet.getChunkZ();
 
-		byte[] oldByteData = Reflection.field("inflatedBuffer")
-				.ofType(byte[].class).in(packet).get();
-		byte[] newByteData = handleCompression(player, packet.c, packet.d,
-				packet.e, true, chunkX, chunkZ, oldByteData);
+		byte[] oldByteData = packet.getData();
+		byte[] newByteData = handleCompression(player, packet.getPrimaryMap(),
+				packet.getExtraMap(), packet.isContinuous(), true, chunkX,
+				chunkZ, oldByteData);
 
 		Deflater deflater = new Deflater(-1);
 		deflater.setInput(newByteData, 0, newByteData.length);
@@ -133,8 +128,10 @@ public class ChunkCacheHandler {
 		int size = deflater.deflate(buffer);
 		deflater.end();
 
-		Reflection.field("buffer").ofType(byte[].class).in(packet).set(buffer);
-		Reflection.field("size").ofType(int.class).in(packet).set(size);
+		Reflection.field("buffer").ofType(byte[].class).in(packet.getPacket())
+				.set(buffer);
+		Reflection.field("size").ofType(int.class).in(packet.getPacket())
+				.set(size);
 	}
 
 	/**

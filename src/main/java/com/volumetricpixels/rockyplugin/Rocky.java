@@ -78,11 +78,11 @@ public class Rocky extends JavaPlugin implements Runnable {
 		configuration = new RockyConfig();
 
 		// For each user online we need to override their values
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			RockyPlayer sp = RockyManager.getPlayer(player);
-			RockyPlayerHandler.updateBukkitEntry(sp);
-			RockyPlayerHandler.updateNetworkEntry(sp);
-			RockyPlayerHandler.sendAuthentication(sp);
+		RockyPlayer[] players = RockyManager.getOnlinePlayers();
+		for (RockyPlayer player : players) {
+			RockyPlayerHandler.updateBukkitEntry(player);
+			RockyPlayerHandler.updateNetworkEntry(player);
+			RockyPlayerHandler.sendAuthentication(player);
 		}
 
 		// Start counting ticks
