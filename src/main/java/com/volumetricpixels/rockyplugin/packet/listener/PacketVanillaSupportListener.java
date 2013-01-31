@@ -62,7 +62,6 @@ public class PacketVanillaSupportListener implements PacketListener {
 							.getItem(
 									((PacketNamedEntitySpawn) packet)
 											.getCurrentItem()).getDefaultId());
-			return true;
 		} else if (packetId == 0x68) {
 			ItemStack[] stacks = ((PacketWindowItems) packet).getItems();
 			for (ItemStack itemStack : stacks) {
@@ -72,7 +71,6 @@ public class PacketVanillaSupportListener implements PacketListener {
 							.getItem(itemStack.id));
 				}
 			}
-			return true;
 		}
 		if (item != null
 				&& item.id >= RockyMaterialManager.DEFAULT_ITEM_PLACEHOLDER_ID) {

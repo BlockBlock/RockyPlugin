@@ -83,13 +83,14 @@ public class RockyPacketManager implements PacketManager {
 	@SuppressWarnings("unchecked")
 	@Override
 	public PacketVanilla getInstance(Packet packet) {
+		RockyPacketVanilla<Packet> vanilla = null;
 		if (corePacket.containsKey(packet.k())) {
 			try {
 				Class<? extends PacketVanilla> clazz = corePacket.get(packet
 						.k());
 				Constructor<? extends PacketVanilla> constructor = clazz
 						.getConstructor();
-				RockyPacketVanilla<Packet> vanilla = (RockyPacketVanilla<Packet>) constructor
+				vanilla = (RockyPacketVanilla<Packet>) constructor
 						.newInstance();
 				vanilla.setPacket(packet);
 			} catch (InstantiationException e) {
@@ -119,7 +120,7 @@ public class RockyPacketManager implements PacketManager {
 			}
 
 		}
-		return null;
+		return vanilla;
 	}
 
 	/**
@@ -129,8 +130,9 @@ public class RockyPacketManager implements PacketManager {
 	public void addListener(PacketListener listener, int... packetIds) {
 		for (int packetId : packetIds) {
 			List<PacketListener> listListener = listenerList.get(packetId);
-			if (listener == null) {
+			if (listListener == null) {
 				listListener = new ArrayList<PacketListener>();
+				listenerList.put(packetId, listListener);
 			}
 			listListener.add(listener);
 		}
