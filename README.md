@@ -28,7 +28,7 @@ For those using [Maven](http://maven.apache.org/download.html) to manage project
     <dependency>
         <groupId>com.volumetricpixels</groupId>
         <artifactId>rockyplugin</artifactId>
-        <version>1.4.5-R3.0-SNAPSHOT</version>
+        <version>1.4.6-R0.2-SNAPSHOT</version>
     </dependency>
 
 ## Coding and Pull Request Conventions
