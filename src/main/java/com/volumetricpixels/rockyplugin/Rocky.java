@@ -57,7 +57,7 @@ public class Rocky extends JavaPlugin implements Runnable {
 	private RockyConfig configuration;
 	private Map<String, Integer> playerTimer = new HashMap<String, Integer>();
 	private boolean isDisabled = true;
-	
+
 	/**
 	 * 
 	 */
@@ -90,7 +90,7 @@ public class Rocky extends JavaPlugin implements Runnable {
 				.withParameterTypes(int.class, boolean.class, boolean.class,
 						Class.class).in(Packet.class)
 				.invoke(195, true, true, RockyPacket.class);
-		
+
 		// Load the configuration
 		configuration = new RockyConfig();
 
@@ -99,14 +99,14 @@ public class Rocky extends JavaPlugin implements Runnable {
 		for (Player player : players) {
 			handlePlayerLogin(player);
 		}
-		
+
 		// Register our listeners and commands
 		Bukkit.getPluginManager().registerEvents(new RockyPlayerListener(),
 				this);
 		Bukkit.getPluginManager().registerEvents(
 				RockyManager.getMaterialManager(), this);
 		getCommand("rocky").setExecutor(new RockyCommand());
-		
+
 		// Load the current material registered
 		YamlConfiguration itemConfig = new YamlConfiguration();
 		try {
@@ -136,7 +136,7 @@ public class Rocky extends JavaPlugin implements Runnable {
 				.callEvent(new RockyLoadingEvent());
 		Bukkit.getServer().getPluginManager()
 				.callEvent(new RockyFinishedLoadingEvent());
-		
+
 		isDisabled = false;
 	}
 
@@ -146,7 +146,7 @@ public class Rocky extends JavaPlugin implements Runnable {
 	@Override
 	public void onDisable() {
 		isDisabled = true;
-		
+
 		// Save the current material registered
 		YamlConfiguration itemConfig = new YamlConfiguration();
 		try {
@@ -165,6 +165,9 @@ public class Rocky extends JavaPlugin implements Runnable {
 
 		// Cancel all task registered by the plugin
 		getServer().getScheduler().cancelTasks(this);
+
+		// Prevent annoying messages about like "CONFLICT @ X"
+		RockyManager.getMaterialManager().clear();
 	}
 
 	/**
@@ -279,7 +282,7 @@ public class Rocky extends JavaPlugin implements Runnable {
 		Rocky.getInstance().addPlayerToCheckList(player);
 		RockyPlayerHandler.sendAuthentication(player);
 	}
-	
+
 	/**
 	 * 
 	 * @return

@@ -114,4 +114,9 @@ public interface MaterialManager extends Listener {
 	 * @param material
 	 */
 	void deleteMaterial(Material material);
+	
+	/**
+	 * 
+	 */
+	void clear();
 }

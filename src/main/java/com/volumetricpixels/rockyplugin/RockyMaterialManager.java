@@ -543,4 +543,17 @@ public final class RockyMaterialManager implements MaterialManager {
 		return blockNameList.get(data);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void clear() {
+		for (int itemId : itemList.keySet()) {
+			net.minecraft.server.v1_4_6.Item.byId[itemId] = null;
+		}
+		for (int blockId : blockList.keySet()) {
+			net.minecraft.server.v1_4_6.Block.byId[blockId] = null;
+		}
+	}
+
 }
