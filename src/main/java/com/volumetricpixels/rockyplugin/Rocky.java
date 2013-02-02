@@ -56,7 +56,8 @@ public class Rocky extends JavaPlugin implements Runnable {
 
 	private RockyConfig configuration;
 	private Map<String, Integer> playerTimer = new HashMap<String, Integer>();
-
+	private boolean isDisabled = true;
+	
 	/**
 	 * 
 	 */
@@ -74,17 +75,6 @@ public class Rocky extends JavaPlugin implements Runnable {
 				new RockyResourceManager(), new RockyKeyBindingManager(),
 				new RockyPacketManager(), new RockyMaterialManager()));
 
-		// Load the configuration
-		configuration = new RockyConfig();
-
-		// For each user online we need to override their values
-		RockyPlayer[] players = RockyManager.getOnlinePlayers();
-		for (RockyPlayer player : players) {
-			RockyPlayerHandler.updateBukkitEntry(player);
-			RockyPlayerHandler.updateNetworkEntry(player);
-			RockyPlayerHandler.sendAuthentication(player);
-		}
-
 		// Start counting ticks
 		Bukkit.getServer().getScheduler()
 				.scheduleSyncRepeatingTask(this, this, 0, 1);
@@ -100,14 +90,23 @@ public class Rocky extends JavaPlugin implements Runnable {
 				.withParameterTypes(int.class, boolean.class, boolean.class,
 						Class.class).in(Packet.class)
 				.invoke(195, true, true, RockyPacket.class);
+		
+		// Load the configuration
+		configuration = new RockyConfig();
 
+		// For each user online we need to override their values
+		Player[] players = Bukkit.getOnlinePlayers();
+		for (Player player : players) {
+			handlePlayerLogin(player);
+		}
+		
 		// Register our listeners and commands
 		Bukkit.getPluginManager().registerEvents(new RockyPlayerListener(),
 				this);
 		Bukkit.getPluginManager().registerEvents(
 				RockyManager.getMaterialManager(), this);
 		getCommand("rocky").setExecutor(new RockyCommand());
-
+		
 		// Load the current material registered
 		YamlConfiguration itemConfig = new YamlConfiguration();
 		try {
@@ -137,6 +136,8 @@ public class Rocky extends JavaPlugin implements Runnable {
 				.callEvent(new RockyLoadingEvent());
 		Bukkit.getServer().getPluginManager()
 				.callEvent(new RockyFinishedLoadingEvent());
+		
+		isDisabled = false;
 	}
 
 	/**
@@ -144,6 +145,8 @@ public class Rocky extends JavaPlugin implements Runnable {
 	 */
 	@Override
 	public void onDisable() {
+		isDisabled = true;
+		
 		// Save the current material registered
 		YamlConfiguration itemConfig = new YamlConfiguration();
 		try {
@@ -262,6 +265,27 @@ public class Rocky extends JavaPlugin implements Runnable {
 
 		// Update map waypoints
 		player.updateWaypoints();
+	}
+
+	/**
+	 * 
+	 * @param player
+	 */
+	public void handlePlayerLogin(Player player) {
+		RockyPlayerHandler.updateBukkitEntry(player);
+		RockyPlayerHandler.updateNetworkEntry(player);
+		RockyPlayerHandler.sendAuthentication(player);
+
+		Rocky.getInstance().addPlayerToCheckList(player);
+		RockyPlayerHandler.sendAuthentication(player);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isDisabled() {
+		return isDisabled;
 	}
 
 }

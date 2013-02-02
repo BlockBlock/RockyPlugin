@@ -25,9 +25,9 @@ import org.bukkit.event.HandlerList;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 
 /**
- * Event that is called when a player stop seeing another player
+ * Event that is called when a player sees another player.
  */
-public class PlayerLeavePlayerArea extends Event {
+public class PlayerEnterArea extends Event {
 	private static final HandlerList HANDLER = new HandlerList();
 	private final RockyPlayer player;
 	private final RockyPlayer trigger;
@@ -38,9 +38,9 @@ public class PlayerLeavePlayerArea extends Event {
 	 * @param player
 	 *            the player viewer
 	 * @param trigger
-	 *            the player that has left another's player view area
+	 *            the player that enters another player view area
 	 */
-	public PlayerLeavePlayerArea(RockyPlayer player, RockyPlayer trigger) {
+	public PlayerEnterArea(RockyPlayer player, RockyPlayer trigger) {
 		this.player = player;
 		this.trigger = trigger;
 	}
@@ -55,9 +55,9 @@ public class PlayerLeavePlayerArea extends Event {
 	}
 
 	/**
-	 * Gets the player that has left another's player view area
+	 * Gets the player that enters the player's view area.
 	 * 
-	 * @return the player that has left another's player view area
+	 * @return the player that enters the player's view area
 	 */
 	public RockyPlayer getTriggerPlayer() {
 		return trigger;

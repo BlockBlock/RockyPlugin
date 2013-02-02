@@ -7,7 +7,7 @@
 	<name>RockyPlugin</name>
 	<groupId>com.volumetricpixels</groupId>
 	<artifactId>rockyplugin</artifactId>
-	<version>1.4.6-R0.1-SNAPSHOT</version>
+	<version>1.4.6-R0.2-SNAPSHOT</version>
 	<url>http://www.volumetricpixels.com</url>
 	<inceptionYear>2011</inceptionYear>
 	<description>RockyPlugin</description>

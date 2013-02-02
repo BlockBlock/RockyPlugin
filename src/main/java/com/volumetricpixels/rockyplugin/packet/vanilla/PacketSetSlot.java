@@ -29,6 +29,29 @@ import net.minecraft.server.v1_4_6.Packet103SetSlot;
 public class PacketSetSlot extends RockyPacketVanilla<Packet103SetSlot> {
 
 	/**
+	 * Constructor for sending the packet
+	 * 
+	 * @param id
+	 *            the windows id
+	 * @param slot
+	 *            the slot
+	 * @param stack
+	 *            the item stack
+	 */
+	public PacketSetSlot(int id, int slot, ItemStack stack) {
+		packet = new Packet103SetSlot();
+		packet.a = id;
+		packet.b = slot;
+		packet.c = stack;
+	}
+
+	/**
+	 * Default constructor
+	 */
+	public PacketSetSlot() {	
+	}
+	
+	/**
 	 * Gets the window which is being updated. 0 for player inventory. Note that
 	 * all known window types include the player inventory. This packet will
 	 * only be sent for the currently opened window while the player is

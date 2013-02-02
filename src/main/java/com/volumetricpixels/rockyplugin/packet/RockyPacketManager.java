@@ -39,6 +39,7 @@ import com.volumetricpixels.rockyplugin.packet.vanilla.PacketBulkChunkData;
 import com.volumetricpixels.rockyplugin.packet.vanilla.PacketChunkData;
 import com.volumetricpixels.rockyplugin.packet.vanilla.PacketEntityEquipment;
 import com.volumetricpixels.rockyplugin.packet.vanilla.PacketNamedEntitySpawn;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketPluginMessage;
 import com.volumetricpixels.rockyplugin.packet.vanilla.PacketSetCreativeSlot;
 import com.volumetricpixels.rockyplugin.packet.vanilla.PacketSetSlot;
 import com.volumetricpixels.rockyplugin.packet.vanilla.PacketWindowItems;
@@ -63,7 +64,9 @@ public class RockyPacketManager implements PacketManager {
 		addVanillaPacket(0x67, PacketSetSlot.class);
 		addVanillaPacket(0x68, PacketWindowItems.class);
 		addVanillaPacket(0x6B, PacketSetCreativeSlot.class);
-
+		addVanillaPacket(0xFA, PacketPluginMessage.class);
+		
+		// Default listeners for ChunkCache and VanillaSupport
 		addListener(new PacketMapCacheListener(), 0x33, 0x36);
 		addListener(new PacketVanillaSupportListener(), 0x5, 0x14, 0x67, 0x68,
 				0x6B);

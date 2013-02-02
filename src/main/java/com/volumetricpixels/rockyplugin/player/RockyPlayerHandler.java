@@ -52,6 +52,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 import org.fest.reflect.core.Reflection;
+import org.fest.reflect.field.Invoker;
 
 import com.volumetricpixels.rockyapi.RockyManager;
 import com.volumetricpixels.rockyapi.math.Color;
@@ -498,9 +499,6 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 */
 	@Override
 	public void setVelocity(Vector velocity) {
-		if (!isModded()) {
-			return;
-		}
 		PlayerVelocityEvent event = new PlayerVelocityEvent(this, velocity);
 		Bukkit.getServer().getPluginManager().callEvent(event);
 		if (!event.isCancelled()) {
@@ -525,7 +523,7 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 */
 	@Override
 	public void sendPacket(PacketVanilla packet) {
-		getHandle().playerConnection.sendPacket((RockyPacket) packet);
+		getHandle().playerConnection.sendPacket(packet.getHandler());
 	}
 
 	/**
@@ -534,7 +532,7 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	@Override
 	public void sendImmediatePacket(PacketVanilla packet) {
 		if (getHandle().playerConnection instanceof RockyPacketHandler) {
-			getNetServerHandler().sendImmediatePacket((RockyPacket) packet);
+			getNetServerHandler().sendImmediatePacket(packet.getHandler());
 		} else {
 			sendPacket(packet);
 		}
@@ -1114,12 +1112,15 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 */
 	public static void updateBukkitEntry(Player player) {
 		EntityPlayer ep = ((CraftPlayer) player).getHandle();
-		Reflection
-				.field("bukkitEntity")
-				.ofType(Entity.class)
-				.in(ep)
-				.set(new RockyPlayerHandler((CraftServer) Bukkit.getServer(),
-						ep));
+
+		Invoker<Entity> invoker = Reflection.field("bukkitEntity")
+				.ofType(Entity.class).in(ep);
+		Entity entity = invoker.get();
+		if (entity == null
+				|| !invoker.getClass().equals(RockyPlayerHandler.class)) {
+			invoker.set(new RockyPlayerHandler(
+					(CraftServer) Bukkit.getServer(), ep));
+		}
 	}
 
 	/**
@@ -1146,7 +1147,7 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 		List<PlayerConnection> handleList = (List<PlayerConnection>) Reflection
 				.field("d").ofType(List.class)
 				.in(((DedicatedServer) MinecraftServer.getServer()).ae()).get();
-		
+
 		handleList.remove(oldHandler);
 		handleList.add(handler);
 

@@ -37,10 +37,9 @@ import org.fest.reflect.core.Reflection;
 import org.fest.reflect.field.Invoker;
 
 import com.volumetricpixels.rockyapi.RockyManager;
-import com.volumetricpixels.rockyapi.event.player.PlayerEnterPlayerArea;
+import com.volumetricpixels.rockyapi.event.player.PlayerEnterArea;
 import com.volumetricpixels.rockyapi.packet.protocol.PacketPlayerAppearance;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
-import com.volumetricpixels.rockyplugin.player.RockyPlayerHandler;
 import com.volumetricpixels.rockyplugin.player.RockyPlayerServerManager;
 
 /**
@@ -54,14 +53,7 @@ public class RockyPlayerListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
-
-		RockyPlayerHandler.updateBukkitEntry(player);
-		RockyPlayerHandler.updateNetworkEntry(player);
-		RockyPlayerHandler.sendAuthentication(player);
-
-		Rocky.getInstance().addPlayerToCheckList(player);
-		RockyPlayerHandler.sendAuthentication(player);
+		Rocky.getInstance().handlePlayerLogin(event.getPlayer());
 	}
 
 	/**
@@ -122,7 +114,7 @@ public class RockyPlayerListener implements Listener {
 	 * @param event
 	 */
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void onPlayerEnterPlayerArea(PlayerEnterPlayerArea event) {
+	public void onPlayerEnterPlayerArea(PlayerEnterArea event) {
 		if (event.getPlayer().isModded()) {
 			event.getPlayer().sendPacket(
 					new PacketPlayerAppearance(event.getTriggerPlayer()));

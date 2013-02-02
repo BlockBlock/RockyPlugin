@@ -26,6 +26,7 @@ import org.fest.reflect.core.Reflection;
 
 import com.volumetricpixels.rockyapi.RockyManager;
 import com.volumetricpixels.rockyapi.player.RenderDistance;
+import com.volumetricpixels.rockyplugin.Rocky;
 
 import net.minecraft.server.v1_4_6.EntityPlayer;
 import net.minecraft.server.v1_4_6.LongHashMap;
@@ -47,7 +48,8 @@ public class RockyPlayerServerManager extends PlayerChunkMap {
 		super(Reflection.field("world").ofType(WorldServer.class).in(instance)
 				.get(), 3);
 
-		serverDistance = Reflection.field("e").ofType(int.class).in(instance).get();
+		serverDistance = Reflection.field("e").ofType(int.class).in(instance)
+				.get();
 
 		Reflection
 				.field("managedPlayers")
@@ -74,7 +76,9 @@ public class RockyPlayerServerManager extends PlayerChunkMap {
 	 */
 	@Override
 	public void addPlayer(EntityPlayer player) {
-		if (RockyManager.getPlayerFromId(player.id) == null) {
+		if (Rocky.getInstance().isDisabled()
+				|| RockyManager.getPlayerFromId(player.id) == null) {
+			super.addPlayer(player);
 			return;
 		}
 		setDynamicViewDistance(RockyManager.getPlayerFromId(player.id)
@@ -87,7 +91,9 @@ public class RockyPlayerServerManager extends PlayerChunkMap {
 	 */
 	@Override
 	public void b(EntityPlayer player) {
-		if (RockyManager.getPlayerFromId(player.id) == null) {
+		if (Rocky.getInstance().isDisabled()
+				|| RockyManager.getPlayerFromId(player.id) == null) {
+			super.b(player);
 			return;
 		}
 		setDynamicViewDistance(RockyManager.getPlayerFromId(player.id)
@@ -100,7 +106,9 @@ public class RockyPlayerServerManager extends PlayerChunkMap {
 	 */
 	@Override
 	public void removePlayer(EntityPlayer player) {
-		if (RockyManager.getPlayerFromId(player.id) == null) {
+		if (Rocky.getInstance().isDisabled()
+				|| RockyManager.getPlayerFromId(player.id) == null) {
+			super.removePlayer(player);
 			return;
 		}
 		setDynamicViewDistance(RockyManager.getPlayerFromId(player.id)
@@ -113,7 +121,9 @@ public class RockyPlayerServerManager extends PlayerChunkMap {
 	 */
 	@Override
 	public void movePlayer(EntityPlayer player) {
-		if (RockyManager.getPlayerFromId(player.id) == null) {
+		if (Rocky.getInstance().isDisabled()
+				|| RockyManager.getPlayerFromId(player.id) == null) {
+			super.movePlayer(player);
 			return;
 		}
 		setDynamicViewDistance(RockyManager.getPlayerFromId(player.id)

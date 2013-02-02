@@ -122,6 +122,8 @@ public class RockyCommand implements CommandExecutor {
 			RockyManager.getPlayer(player).setRenderDistance(
 					RenderDistance.valueOf(name.toUpperCase()));
 			return true;
+		} else if (c.equals("cache-info")) {
+			
 		}
 		return false;
 	}

@@ -36,8 +36,8 @@ import org.bukkit.Bukkit;
 import org.fest.reflect.core.Reflection;
 
 import com.volumetricpixels.rockyapi.RockyManager;
-import com.volumetricpixels.rockyapi.event.player.PlayerEnterPlayerArea;
-import com.volumetricpixels.rockyapi.event.player.PlayerLeavePlayerArea;
+import com.volumetricpixels.rockyapi.event.player.PlayerEnterArea;
+import com.volumetricpixels.rockyapi.event.player.PlayerLeaveArea;
 import com.volumetricpixels.rockyapi.player.RenderDistance;
 import com.volumetricpixels.rockyapi.player.RockyPlayer;
 import com.volumetricpixels.rockyplugin.Rocky;
@@ -201,7 +201,7 @@ public class RockyPacketHandler extends PlayerConnection {
 					.getPlayerFromId(((Packet20NamedEntitySpawn) packet).a);
 			if (player != null) {
 				Bukkit.getPluginManager().callEvent(
-						new PlayerEnterPlayerArea(player, RockyManager
+						new PlayerEnterArea(player, RockyManager
 								.getPlayer(getPlayer())));
 			}
 			break;
@@ -211,7 +211,7 @@ public class RockyPacketHandler extends PlayerConnection {
 				player = RockyManager.getPlayerFromId(id);
 				if (player != null) {
 					Bukkit.getPluginManager().callEvent(
-							new PlayerLeavePlayerArea(player, RockyManager
+							new PlayerLeaveArea(player, RockyManager
 									.getPlayer(getPlayer())));
 				}
 			}

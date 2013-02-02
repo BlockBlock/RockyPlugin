@@ -44,10 +44,14 @@ public class RockyPlayerManager implements PlayerManager {
 	 */
 	@Override
 	public RockyPlayer getPlayer(Player player) {
-		if (player instanceof RockyPlayer) {
-			return (RockyPlayer) player;
+		if (player instanceof RockyPlayerHandler) {
+			return (RockyPlayerHandler) player;
+		} else if (((((CraftPlayer) player).getHandle()).getBukkitEntity()) instanceof RockyPlayerHandler) {
+			return (RockyPlayerHandler) ((((CraftPlayer) player).getHandle())
+					.getBukkitEntity());
 		}
-		return (RockyPlayer) ((((CraftPlayer) player).getHandle())
+		RockyPlayerHandler.updateBukkitEntry(player);
+		return (RockyPlayerHandler) ((((CraftPlayer) player).getHandle())
 				.getBukkitEntity());
 	}
 

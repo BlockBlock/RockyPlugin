@@ -72,4 +72,5 @@ public class RockyItemTool extends ItemTool implements RockyItemType {
 		return (destroySpeed.containsKey(block.id) ? destroySpeed.get(block.id)
 				: 1.0f);
 	}
+
 }
