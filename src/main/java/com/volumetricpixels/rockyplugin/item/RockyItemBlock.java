@@ -29,7 +29,7 @@ import com.volumetricpixels.rockyapi.material.Material;
 /**
  * 
  */
-public class RockyItemBlock extends ItemBlock implements RockyItemType {
+public class RockyItemBlock extends ItemBlock {
 
 	/**
 	 * 

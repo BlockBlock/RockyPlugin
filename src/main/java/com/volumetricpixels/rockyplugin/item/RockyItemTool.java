@@ -34,7 +34,7 @@ import com.volumetricpixels.rockyapi.material.Tool;
 /**
  * 
  */
-public class RockyItemTool extends ItemTool implements RockyItemType {
+public class RockyItemTool extends ItemTool {
 
 	private Map<Integer, Float> destroySpeed;
 

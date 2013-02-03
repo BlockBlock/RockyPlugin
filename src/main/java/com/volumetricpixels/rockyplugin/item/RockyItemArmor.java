@@ -31,7 +31,7 @@ import com.volumetricpixels.rockyapi.material.Material;
 /**
  * 
  */
-public class RockyItemArmor extends ItemArmor implements RockyItemType {
+public class RockyItemArmor extends ItemArmor {
 	/**
 	 * 
 	 */

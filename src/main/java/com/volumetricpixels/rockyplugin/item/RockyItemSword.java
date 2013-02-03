@@ -30,7 +30,7 @@ import com.volumetricpixels.rockyapi.material.Weapon;
 /**
  * 
  */
-public class RockyItemSword extends ItemSword implements RockyItemType {
+public class RockyItemSword extends ItemSword {
 
 	/**
 	 * 

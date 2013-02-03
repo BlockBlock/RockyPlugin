@@ -31,7 +31,7 @@ import com.volumetricpixels.rockyapi.material.Material;
 /**
  * 
  */
-public class RockyItem extends Item implements RockyItemType {
+public class RockyItem extends Item {
 
 	private boolean isThrowable;
 

@@ -27,7 +27,7 @@ import com.volumetricpixels.rockyapi.material.Material;
 /**
  * 
  */
-public class RockyItemFood extends ItemFood implements RockyItemType {
+public class RockyItemFood extends ItemFood {
 
 	/**
 	 * 
