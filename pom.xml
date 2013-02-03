@@ -7,7 +7,7 @@
 	<name>RockyPlugin</name>
 	<groupId>com.volumetricpixels</groupId>
 	<artifactId>rockyplugin</artifactId>
-	<version>1.4.6-R0.2-SNAPSHOT</version>
+	<version>1.4.6-R0.3-SNAPSHOT</version>
 	<url>http://www.volumetricpixels.com</url>
 	<inceptionYear>2011</inceptionYear>
 	<description>RockyPlugin</description>
@@ -16,9 +16,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<currentYear>2012</currentYear>
-		<craftbukkitVersion>1.4.6-R0.2-SNAPSHOT</craftbukkitVersion>
+		<craftbukkitVersion>1.4.6-R0.3-SNAPSHOT</craftbukkitVersion>
 		<minecraftVersion>1.4.6</minecraftVersion>
-		<buildNumber>210</buildNumber>
+		<buildNumber>225</buildNumber>
 	</properties>
 
 	<!-- Company information -->

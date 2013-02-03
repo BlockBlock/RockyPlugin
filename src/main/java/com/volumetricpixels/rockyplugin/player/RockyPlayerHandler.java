@@ -499,23 +499,28 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 */
 	@Override
 	public void setVelocity(Vector velocity) {
-		PlayerVelocityEvent event = new PlayerVelocityEvent(this, velocity);
-		Bukkit.getServer().getPluginManager().callEvent(event);
-		if (!event.isCancelled()) {
-			sendPacket(new PacketSetVelocity(getEntityId(), event.getVelocity()
-					.getX(), event.getVelocity().getY(), event.getVelocity()
-					.getZ()));
-		}
-		double speedX = Math.abs(event.getVelocity().getX()
-				* event.getVelocity().getX());
-		double speedY = Math.abs(event.getVelocity().getY()
-				* event.getVelocity().getY());
-		double speedZ = Math.abs(event.getVelocity().getZ()
-				* event.getVelocity().getZ());
-		double speed = speedX + speedY + speedZ;
+		if (isModded()) {
+			PlayerVelocityEvent event = new PlayerVelocityEvent(this, velocity);
+			Bukkit.getServer().getPluginManager().callEvent(event);
+			if (!event.isCancelled()) {
+				sendPacket(new PacketSetVelocity(getEntityId(), event
+						.getVelocity().getX(), event.getVelocity().getY(),
+						event.getVelocity().getZ()));
+			}
+			double speedX = Math.abs(event.getVelocity().getX()
+					* event.getVelocity().getX());
+			double speedY = Math.abs(event.getVelocity().getY()
+					* event.getVelocity().getY());
+			double speedZ = Math.abs(event.getVelocity().getZ()
+					* event.getVelocity().getZ());
+			double speed = speedX + speedY + speedZ;
 
-		velocityAdjustment = System.currentTimeMillis() + (long) (speed * 5);
-		getHandle().velocityChanged = false;
+			velocityAdjustment = System.currentTimeMillis()
+					+ (long) (speed * 5);
+			getHandle().velocityChanged = true;
+		} else {
+			super.setVelocity(velocity);
+		}
 	}
 
 	/**
