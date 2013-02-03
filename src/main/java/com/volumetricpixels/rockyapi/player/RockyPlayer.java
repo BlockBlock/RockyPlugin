@@ -539,6 +539,12 @@ public interface RockyPlayer extends Player {
 	void sendPacketToObservers(Packet packet);
 
 	/**
+	 * 
+	 * @param packet
+	 */
+	void sendPacketToObservers(PacketVanilla packet);
+
+	/**
 	 * Internal use only
 	 * 
 	 * @param packet

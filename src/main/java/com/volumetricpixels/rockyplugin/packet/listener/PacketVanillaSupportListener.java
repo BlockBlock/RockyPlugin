@@ -66,6 +66,14 @@ public class PacketVanillaSupportListener implements PacketListener {
 							.getItem(
 									((PacketNamedEntitySpawn) packet)
 											.getCurrentItem()).getDefaultId());
+			if (!player.getTitle().equals("") && !player.isModded()) {
+				RockyPlayer otherPlayer = RockyManager
+						.getPlayerFromId(((PacketNamedEntitySpawn) packet)
+								.getPlayerId());
+				String title = otherPlayer.getTitleFor(player).replace(
+						"[Hide]", "");
+				((PacketNamedEntitySpawn) packet).setPlayerName(title);
+			}
 		} else if (packetId == 0x68) {
 			ItemStack[] stacks = ((PacketWindowItems) packet).getItems();
 			for (ItemStack itemStack : stacks) {
@@ -76,6 +84,7 @@ public class PacketVanillaSupportListener implements PacketListener {
 				}
 			}
 		}
+
 		if (item != null
 				&& item.id >= RockyMaterialManager.DEFAULT_ITEM_PLACEHOLDER_ID) {
 			setVanillaData(item,

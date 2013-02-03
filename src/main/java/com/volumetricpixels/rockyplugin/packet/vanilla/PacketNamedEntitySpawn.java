@@ -31,6 +31,40 @@ public class PacketNamedEntitySpawn extends
 		RockyPacketVanilla<Packet20NamedEntitySpawn> {
 
 	/**
+	 * Constructor for sending the packet
+	 * 
+	 * @param id
+	 *            the id of the entity
+	 * @param name
+	 *            the name of the entity
+	 * @param position
+	 *            the position of the entity
+	 * @param yaw
+	 *            the yaw of the entity
+	 * @param pitch
+	 *            the pitch of the entity
+	 * @param currentItem
+	 *            the current item equiped
+	 */
+	public PacketNamedEntitySpawn(int id, String name, Vector3f position,
+			int yaw, int pitch, int currentItem) {
+		packet.a = id;
+		packet.b = name;
+		packet.c = (int) position.x;
+		packet.d = (int) position.y;
+		packet.e = (int) position.z;
+		packet.f = (byte) yaw;
+		packet.g = (byte) pitch;
+		packet.h = currentItem;
+	}
+
+	/**
+	 * Default Constructor
+	 */
+	public PacketNamedEntitySpawn() {
+	}
+
+	/**
 	 * Gets the entity id
 	 */
 	public int getPlayerId() {
@@ -42,6 +76,16 @@ public class PacketNamedEntitySpawn extends
 	 */
 	public String getPlayerName() {
 		return packet.b;
+	}
+
+	/**
+	 * Sets the player name
+	 * 
+	 * @param name
+	 *            the new name
+	 */
+	public void setPlayerName(String name) {
+		packet.b = name;
 	}
 
 	/**

@@ -56,6 +56,7 @@ import org.fest.reflect.field.Invoker;
 
 import com.volumetricpixels.rockyapi.RockyManager;
 import com.volumetricpixels.rockyapi.math.Color;
+import com.volumetricpixels.rockyapi.math.Vector3f;
 import com.volumetricpixels.rockyapi.packet.Packet;
 import com.volumetricpixels.rockyapi.packet.PacketVanilla;
 import com.volumetricpixels.rockyapi.packet.protocol.PacketAccessory;
@@ -75,6 +76,8 @@ import com.volumetricpixels.rockyplugin.Rocky;
 import com.volumetricpixels.rockyplugin.RockyPermissibleBase;
 import com.volumetricpixels.rockyplugin.packet.RockyPacket;
 import com.volumetricpixels.rockyplugin.packet.RockyPacketHandler;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketDestroyEntity;
+import com.volumetricpixels.rockyplugin.packet.vanilla.PacketNamedEntitySpawn;
 
 /**
  * 
@@ -661,7 +664,19 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	@Override
 	public void setTitle(String title) {
 		this.title = title;
-		sendPacketToObservers(new PacketPlayerAppearance(this));
+
+		if (!isModded()) {
+			Location location = getLocation();
+
+			sendPacketToObservers(new PacketDestroyEntity(getEntityId()));
+			sendPacketToObservers(new PacketNamedEntitySpawn(getEntityId(),
+					getName(), new Vector3f(location.getBlockX(),
+							location.getBlockY(), location.getBlockZ()),
+					(int) location.getYaw(), (int) location.getPitch(),
+					getItemInHand().getTypeId()));
+		} else {
+			sendPacketToObservers(new PacketPlayerAppearance(this));
+		}
 	}
 
 	/**
@@ -669,10 +684,19 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 */
 	@Override
 	public void setTitleFor(RockyPlayer viewingPlayer, String title) {
-		if (hasObserver(viewingPlayer)) {
+		titleFor.put(viewingPlayer.getName(), title);
+		if (!isModded()) {
+			Location location = getLocation();
+
+			viewingPlayer.sendPacket(new PacketDestroyEntity(getEntityId()));
+			viewingPlayer.sendPacket(new PacketNamedEntitySpawn(getEntityId(),
+					getName(), new Vector3f(location.getBlockX(), location
+							.getBlockY(), location.getBlockZ()), (int) location
+							.getYaw(), (int) location.getPitch(),
+					getItemInHand().getTypeId()));
+		} else {
 			viewingPlayer.sendPacket(new PacketPlayerAppearance(this));
 		}
-		titleFor.put(viewingPlayer.getName(), title);
 	}
 
 	/**
@@ -688,7 +712,10 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 */
 	@Override
 	public String getTitleFor(RockyPlayer viewingPlayer) {
-		return titleFor.get(viewingPlayer.getName());
+		if (titleFor.containsKey(viewingPlayer.getName())) {
+			return titleFor.get(viewingPlayer.getName());
+		}
+		return title;
 	}
 
 	/**
@@ -772,6 +799,18 @@ public class RockyPlayerHandler extends CraftPlayer implements RockyPlayer {
 	 */
 	@Override
 	public void sendPacketToObservers(Packet packet) {
+		for (Player player : observers) {
+			if (player instanceof RockyPlayer) {
+				((RockyPlayer) player).sendPacket(packet);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void sendPacketToObservers(PacketVanilla packet) {
 		for (Player player : observers) {
 			if (player instanceof RockyPlayer) {
 				((RockyPlayer) player).sendPacket(packet);
